@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@elm-tooling/elm-language-server": "^2.2.0",
+    "elm-format": "^0.8.5"
+  }
+}

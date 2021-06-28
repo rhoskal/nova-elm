@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<completions>
+    <provider>
+        <syntax>elm</syntax>
+        <selector>elm</selector>
+        <expression>\b[a-zA-Z0-9-_]*</expression>
+    </provider>
+</completions>

@@ -1,0 +1,70 @@
+{
+  "identifier": "hansjhoffman.elm",
+  "name": "Elm",
+  "author": "Hans Hoffman",
+  "organization": "Hans Hoffman",
+  "description": "Elm syntax highlighting and code completions.",
+  "version": "0.1.0",
+  "categories": ["commands", "completions", "formatters", "languages"],
+  "license": "MIT",
+  "repository": "https://github.com/hansjhoffman/nova-elm",
+  "bugs": {
+    "url": "https://github.com/hansjhoffman/nova-elm/issues"
+  },
+
+  "main": "main.dist.js",
+
+  "activationEvents": ["onLanguage:elm"],
+
+  "entitlements": {
+    "process": true,
+    "filesystem": "readwrite"
+  },
+
+  "config": [
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on save",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "elm-format executable",
+      "type": "path"
+    }
+  ],
+
+  "configWorkspace": [
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on save",
+      "type": "boolean",
+      "values": [
+        ["null", "Inherit from Global Settings"],
+        ["false", "Disable"],
+        ["true", "Enable"]
+      ],
+      "default": "null"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "elm-format executable",
+      "type": "path",
+      "relative": true
+    }
+  ],
+
+  "commands": {
+    "editor": [
+      {
+        "title": "Format Document",
+        "command": "hansjhoffman.elm.command.format",
+        "when": "documentHasPath && editorHasFocus",
+        "filters": {
+          "syntaxes": ["elm"]
+        }
+      }
+    ]
+  }
+}
