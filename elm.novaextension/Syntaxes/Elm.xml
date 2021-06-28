@@ -49,7 +49,6 @@
     
     <scopes>
         <include syntax="self" collection="comments" />
-        <include syntax="self" collection="blocks" />
         <include syntax="self" collection="keywords" />
         <include syntax="self" collection="types" />
         <include syntax="self" collection="functions" />
@@ -81,71 +80,6 @@
             </scope>
         </collection>
         
-        <!-- Blocks -->
-        <collection name="blocks">
-            <scope name="elm.block">
-                <symbol type="block">
-                    <context behavior="subtree" />
-                </symbol>
-                <starts-with>
-                    <expression>\{</expression>
-                    <capture number="0" name="elm.block.bracket" />
-                </starts-with>
-                <ends-with>
-                    <expression>\}</expression>
-                    <capture number="0" name="elm.block.bracket" />
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" />
-                </subscopes>
-            </scope>
-        </collection>
-        
-        <!-- Functions -->
-        <collection name="functions">
-            <!-- Type Signature -->
-            <scope name="elm.functions.signature">
-                <starts-with>
-                    <expression>^(?| ([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))\s+(:)</expression>
-                    <capture number="1" name="elm.identifier.function.name" />
-                    <capture number="2" name="elm.keyword" />
-                </starts-with>
-                <!-- <starts-with>
-                    <expression>^(?| (port)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))\s+(:)</expression>
-                    <capture number="1" name="elm.keyword" />
-                    <capture number="2" name="elm.identifier.function.name" />
-                    <capture number="3" name="elm.keyword" />
-                </starts-with> -->
-                <ends-with>
-                    <expression>(?=^\S)</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="types" />
-                    <include syntax="self" collection="punctuation" />
-                </subscopes>
-            </scope>
-            
-            <!-- Function -->
-            <scope name="elm.functions.block">
-                <symbol type="function" scope="global">
-                    <context behavior="subtree" foldable="false" />
-                </symbol>
-                <starts-with>
-                    <expression>^(?| ([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))</expression>
-                    <capture number="1" name="elm.identifier.function.name" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=^\S)</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="comments" />
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="strings" />
-                    <include syntax="self" collection="types" />
-                </subscopes>
-            </scope>
-        </collection>
-        
         <!-- Keywords -->
         <collection name="keywords">
             <include syntax="self" collection="punctuation" />
@@ -167,6 +101,51 @@
                     <string>then</string>
                     <string>type</string>
                 </strings>
+            </scope>
+        </collection>
+        
+        <!-- Functions -->
+        <collection name="functions">         
+            <!-- Signature -->
+            <scope name="elm.functions.signature">
+                <symbol type="function" scope="global">
+                    <context behavior="subtree" foldable="false" />
+                </symbol>
+                <starts-with>
+                    <expression>^(port\s+)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*)\s+(\:)</expression>
+                    <capture number="1" name="elm.keyword" />
+                    <capture number="2" name="elm.identifier.function.name" />
+                    <capture number="3" name="elm.keyword" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\S)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="comments" />
+                    <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="types" />
+                </subscopes>
+            </scope>
+            
+            <!-- Function -->
+            <scope name="elm.functions.block">
+                <symbol type="function" scope="global">
+                    <context behavior="subtree" foldable="false" />
+                </symbol>
+                <starts-with>
+                    <expression>^(?| ([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))</expression>
+                    <capture number="1" name="elm.identifier.function.name" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\S)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="comments" />
+                    <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="types" />
+                </subscopes>
             </scope>
         </collection>
         
@@ -222,11 +201,11 @@
                 <expression>(\+ | \- | \* | \+\+ | \^ | \/ | \/\/ | \=\= | \/\= | &lt; | &gt; | &lt;&lt; | &gt;&gt; | &lt;\= | &gt;\= | &amp;&amp; | \|\|)</expression>
             </scope>
         </collection>
-        
+    
         <!-- Types -->
         <collection name="types">
             <scope name="elm.type">
-                <expression>\b([A-ZÀ-Ö][a-zA-ZÀ-ÖØ-öø-ÿ]*)</expression>
+                <expression>\b([A-ZÀ-Ö][a-zA-ZÀ-ÖØ-öø-ÿ0-9]*)</expression>
                 <capture number="1" name="elm.identifier.type.name" />
             </scope>
         </collection>
@@ -234,7 +213,7 @@
         <!-- Punctuation -->
         <collection name="punctuation">
             <scope name="elm.punctuation">
-                <expression>(\|&gt; | &lt;\| | \. | \= | \_ | \\ | \| | \-&gt;)</expression>
+                <expression>(\|&gt; | &lt;\| | \. | \= | \_ | \\ | \| | \-&gt; | \:)</expression>
                 <capture number="1" name="elm.keyword" />
             </scope>
         </collection>
