@@ -234,7 +234,7 @@
         <!-- Punctuation -->
         <collection name="punctuation">
             <scope name="elm.punctuation">
-                <expression>(\|&gt; | &lt;\| | \. | \= | \, | \| | \-&gt;)</expression>
+                <expression>(\|&gt; | &lt;\| | \. | \= | \_ | \\ | \| | \-&gt;)</expression>
                 <capture number="1" name="elm.keyword" />
             </scope>
         </collection>
