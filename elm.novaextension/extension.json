@@ -2,8 +2,8 @@
   "identifier": "hansjhoffman.elm",
   "name": "Elm",
   "author": "Hans Hoffman",
-  "organization": "Hans Hoffman",
-  "description": "Elm syntax highlighting and code completions.",
+  "organization": "@hansjhoffman",
+  "description": "Elm syntax highlighting, code completions and Language Server support.",
   "version": "0.1.0",
   "categories": ["commands", "completions", "formatters", "languages"],
   "license": "MIT",
@@ -14,7 +14,7 @@
 
   "main": "main.dist.js",
 
-  "activationEvents": ["onLanguage:elm"],
+  "activationEvents": ["onLanguage:elm", "onWorkspaceContains:elm.json"],
 
   "entitlements": {
     "process": true,
@@ -25,20 +25,22 @@
     {
       "key": "hansjhoffman.elm.config.formatOnSave",
       "title": "Format on save",
+      "description": "When saving, use `elm-format` to format document. Requires the `elm-format` binary path to be set.",
       "type": "boolean",
       "default": false
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
-      "title": "elm-format executable",
+      "title": "elm-format binary",
       "type": "path"
     }
   ],
 
   "configWorkspace": [
     {
-      "key": "hansjhoffman.elm.config.formatOnSave",
-      "title": "Format on save",
+      "key": "hansjhoffman.elm.config.formatDocumentOnSave",
+      "title": "Format document on save",
+      "description": "Run Format Document command on file save.",
       "type": "boolean",
       "values": [
         ["null", "Inherit from Global Settings"],
@@ -58,9 +60,17 @@
   "commands": {
     "editor": [
       {
+        "title": "Jump to Definition",
+        "command": "elm.command.jumpToDefinition",
+        "when": "editorHasFocus",
+        "filters": {
+          "syntaxes": ["elm"]
+        }
+      },
+      {
         "title": "Format Document",
-        "command": "hansjhoffman.elm.command.format",
-        "when": "documentHasPath && editorHasFocus",
+        "command": "elm.command.formatDocument",
+        "when": "editorHasFocus",
         "filters": {
           "syntaxes": ["elm"]
         }
