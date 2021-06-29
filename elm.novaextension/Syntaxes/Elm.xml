@@ -216,28 +216,57 @@
             </scope>
         </collection>
         
-        <!-- Strings -->
+        <!--
+                         .             o8o                                  
+                       .o8             `"'                                  
+             .oooo.o .o888oo oooo d8b oooo  ooo. .oo.    .oooooooo  .oooo.o 
+            d88(  "8   888   `888""8P `888  `888P"Y88b  888' `88b  d88(  "8 
+            `"Y88b.    888    888      888   888   888  888   888  `"Y88b.  
+            o.  )88b   888 .  888      888   888   888  `88bod8P'  o.  )88b 
+            8""888P'   "888" d888b    o888o o888o o888o `8oooooo.  8""888P' 
+                                                        d"     YD           
+                                                        "Y88888P'           
+             
+        -->
         <collection name="strings">
             <scope name="elm.string.single-quoted">
                 <starts-with>
                     <expression>&apos;</expression>
-                    <capture number="0" name="elm.string.single-quoted.delimiter" />
+                    <capture number="0" name="elm.string.quoted.single" />
                 </starts-with>
                 <ends-with>
-                    <expression>&apos;</expression>
-                    <capture number="0" name="elm.string.single-quoted.delimiter" />
+                    <expression>&apos;|(?:(?&lt;!\\)$)</expression>
+                    <capture number="0" name="elm.string.quoted.single" />
                 </ends-with>
+                <subscopes>
+                    <scope name="elm.string.quoted.escape">
+                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
+                    </scope>
+                </subscopes>
             </scope>
             <scope name="elm.string.double-quoted">
                 <starts-with>
                     <expression>&quot;</expression>
-                    <capture number="0" name="elm.string.double-quoted.delimiter" />
+                    <capture number="0" name="elm.string.quoted.double" />
                 </starts-with>
                 <ends-with>
-                    <expression>&quot;</expression>
-                    <capture number="0" name="elm.string.double-quoted.delimiter" />
+                    <expression>&quot;|(?:(?&lt;!\\)$)</expression>
+                    <capture number="0" name="elm.string.quoted.double" />
                 </ends-with>
+                <subscopes>
+                    <scope name="elm.string.quoted.escape">
+                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
+                    </scope>
+                </subscopes>
             </scope>
+            <!-- <scope name="elm.string.multiline">
+                <starts-with>
+                    <expression>\s?&quot;&quot;&quot;</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&quot;&quot;&quot;</expression>
+                </ends-with>
+            </scope> -->
         </collection>
         
         <!--
@@ -272,7 +301,7 @@
         <!-- Punctuation -->
         <collection name="punctuation">
             <scope name="elm.punctuation">
-                <expression>(\|&gt; | &lt;\| | \. | \= | \_ | \\ | \| | \-&gt; | \:)</expression>
+                <expression>(\|&gt; | &lt;\| | \. | \= | \s\_\s | \\ | \| | \-&gt; | \:)</expression>
                 <capture number="1" name="elm.keyword" />
             </scope>
         </collection>
