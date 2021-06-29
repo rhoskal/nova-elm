@@ -109,7 +109,7 @@
             <!-- Signature -->
             <scope name="elm.functions.signature">
                 <symbol type="function">
-                    <context behavior="subtree" />
+                    <context behavior="subtree" foldable="false" />
                 </symbol>
                 <starts-with>
                     <expression>^(port\s+)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*)\s+(\:)</expression>
