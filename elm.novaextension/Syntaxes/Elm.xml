@@ -121,7 +121,7 @@
              888     888   888   888   888  888         888    888  888   888  888   888  `"Y88b.  
              888     888   888   888   888  888   .o8   888 .  888  888   888  888   888  o.  )88b 
             o888o    `V88V"V8P' o888o o888o `Y8bod8P'   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
-        
+
         -->
         <collection name="functions">         
             <!-- Signature -->
@@ -165,6 +165,7 @@
                     <include syntax="self" collection="strings" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="types" />
+                    <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
         </collection>
@@ -226,7 +227,7 @@
             8""888P'   "888" d888b    o888o o888o o888o `8oooooo.  8""888P' 
                                                         d"     YD           
                                                         "Y88888P'           
-             
+
         -->
         <collection name="strings">
             <scope name="elm.string.single-quoted">
@@ -279,14 +280,15 @@
             8""888P'     .8'     o888o o888o   "888" `Y888""8o o88'   888o 
                     .o..P'                                                
                     `Y8P'
-                    
+
         -->
         <collection name="syntax">
             <scope name="elm.bracket">
                 <expression>[\(\[\)\]]</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\+ | \- | \* | \+\+ | \^ | \/ | \/\/ | \=\= | \/\= | &lt; | &gt; | &lt;&lt; | &gt;&gt; | &lt;\= | &gt;\= | &amp;&amp; | \|\|)</expression>
+                <expression>\s+(\+ | \- | \* | \+\+ | \^ | \/ | \/\/ | \=\= | \/\= | &lt; | &gt; | &lt;&lt; | &gt;&gt; | &lt;\= | &gt;\= | &amp;&amp; | \|\|)\s+</expression>
+                <capture number="1" name="elm.keyword" />
             </scope>
         </collection>
     
