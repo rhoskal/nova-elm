@@ -1,32 +1,21 @@
-# Elm Extension
+# Elm support for Nova
 
-This extension provides syntax highlighting and autocompletion for **Elm**.
-
-## Usage
-
-### Asdf
-
-<!--
-🎈 It can also be helpful to include a screenshot or GIF showing your extension in action:
--->
-
-![](https://nova.app/images/en/dark/editor.png)
+This plugin provides **Elm** syntax highlighting, autocompletions, and language server support for the new [Nova editor from Panic](https://panic.com/nova/).
 
 ## Language Support
 
-<!--
-🎈 Whether your extension covers the entirety of a language's syntax or a subset, it can be helpful to describe that for users:
--->
+## Usage
 
-nova-elm currently supports the following features of Important Language:
+![](https://nova.app/images/en/dark/editor.png)
 
-- Lorem
-- Ipsum
-- Dolor
+### Using the default binaries
 
-Support for:
+This extension will automatically find the workspace version of `elm-format` & `elm-language-server` installed under `node_modules` in your workspace root. If one isn't installed this plugin will use a recent, bundled version of either.
 
-- Sit
-- Amet
+To customize this, you can specify the `elm-format` & `elm-language-server` binary location in workspace preferences (Extensions > Elm > Preferences > xxx) as an absolute or workspace-relative path.
 
-is planned for a future update.
+## TODO
+
+- [x] Syntax support
+- [ ] Language server support
+- [ ] Format on save

@@ -31,7 +31,14 @@
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
-      "title": "elm-format binary",
+      "title": "elm-format",
+      "description": "Location of the elm-format binary.",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmLanguageServerPath",
+      "title": "elm-language-server",
+      "description": "Location of the language server binary.",
       "type": "path"
     }
   ],
@@ -52,6 +59,12 @@
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
       "title": "elm-format binary",
+      "type": "path",
+      "relative": true
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmLanguageServerPath",
+      "title": "elm-language-server binary",
       "type": "path",
       "relative": true
     }
