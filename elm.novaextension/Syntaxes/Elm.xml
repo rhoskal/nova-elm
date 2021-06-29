@@ -108,8 +108,8 @@
         <collection name="functions">         
             <!-- Signature -->
             <scope name="elm.functions.signature">
-                <symbol type="function" scope="global">
-                    <context behavior="subtree" foldable="false" />
+                <symbol type="function">
+                    <context behavior="subtree" />
                 </symbol>
                 <starts-with>
                     <expression>^(port\s+)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*)\s+(\:)</expression>
@@ -130,15 +130,15 @@
             
             <!-- Function -->
             <scope name="elm.functions.block">
-                <symbol type="function" scope="global">
-                    <context behavior="subtree" foldable="false" />
+                <symbol type="function">
+                    <context behavior="subtree" />
                 </symbol>
                 <starts-with>
                     <expression>^(?| ([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))</expression>
                     <capture number="1" name="elm.identifier.function.name" />
                 </starts-with>
                 <ends-with>
-                    <expression>(?=^\S)</expression>
+                    <expression>(?=^\n\n)</expression>
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="comments" />
