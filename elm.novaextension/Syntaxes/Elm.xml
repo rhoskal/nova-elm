@@ -117,7 +117,7 @@
                 </subscopes>
             </scope>
         </collection>
-        
+
         <!-- 
              .o88o.                                       .    o8o                                 
              888 `"                                     .o8    `"'                                 
@@ -145,8 +145,8 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="comments" />
-                    <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="types" />
                     <include syntax="self" collection="syntax" />
@@ -167,8 +167,8 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="comments" />
-                    <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="types" />
                     <include syntax="self" collection="syntax" />
@@ -274,20 +274,16 @@
 
         -->
         <collection name="strings">
-            <scope name="elm.string.single-quoted">
+            <scope name="elm.string.multiline">
+                <symbol type="comment">
+                    <context behavior="subtree" />
+                </symbol>
                 <starts-with>
-                    <expression>&apos;</expression>
-                    <capture number="0" name="elm.string.quoted.single" />
+                    <expression>&quot;&quot;&quot;</expression>
                 </starts-with>
                 <ends-with>
-                    <expression>&apos;|(?:(?&lt;!\\)$)</expression>
-                    <capture number="0" name="elm.string.quoted.single" />
+                    <expression>&quot;&quot;&quot;</expression>
                 </ends-with>
-                <subscopes>
-                    <scope name="elm.string.quoted.escape">
-                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
-                    </scope>
-                </subscopes>
             </scope>
             <scope name="elm.string.double-quoted">
                 <starts-with>
@@ -304,14 +300,21 @@
                     </scope>
                 </subscopes>
             </scope>
-            <!-- <scope name="elm.string.multiline">
+            <scope name="elm.string.single-quoted">
                 <starts-with>
-                    <expression>\s?&quot;&quot;&quot;</expression>
+                    <expression>&apos;</expression>
+                    <capture number="0" name="elm.string.quoted.single" />
                 </starts-with>
                 <ends-with>
-                    <expression>&quot;&quot;&quot;</expression>
+                    <expression>&apos;|(?:(?&lt;!\\)$)</expression>
+                    <capture number="0" name="elm.string.quoted.single" />
                 </ends-with>
-            </scope> -->
+                <subscopes>
+                    <scope name="elm.string.quoted.escape">
+                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
+                    </scope>
+                </subscopes>
+            </scope>
         </collection>
         
         <!--
