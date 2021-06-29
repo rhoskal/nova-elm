@@ -57,7 +57,16 @@
     </scopes>
 
     <collections>
-        <!-- Comments -->
+        <!-- 
+                                                                                              .            
+                                                                                            .o8            
+             .ooooo.   .ooooo.  ooo. .oo.  .oo.   ooo. .oo.  .oo.    .ooooo.  ooo. .oo.   .o888oo  .oooo.o 
+            d88' `"Y8 d88' `88b `888P"Y88bP"Y88b  `888P"Y88bP"Y88b  d88' `88b `888P"Y88b    888   d88(  "8 
+            888       888   888  888   888   888   888   888   888  888ooo888  888   888    888   `"Y88b.  
+            888   .o8 888   888  888   888   888   888   888   888  888    .o  888   888    888 . o.  )88b 
+            `Y8bod8P' `Y8bod8P' o888o o888o o888o o888o o888o o888o `Y8bod8P' o888o o888o   "888" 8""888P' 
+
+        -->
         <collection name="comments">
             <scope name="elm.comment.single" spell-check="true">
                 <expression>(--)(.*)$</expression>
@@ -104,7 +113,16 @@
             </scope>
         </collection>
         
-        <!-- Functions -->
+        <!-- 
+             .o88o.                                       .    o8o                                 
+             888 `"                                     .o8    `"'                                 
+            o888oo  oooo  oooo  ooo. .oo.    .ooooo.  .o888oo oooo   .ooooo.  ooo. .oo.    .oooo.o 
+             888    `888  `888  `888P"Y88b  d88' `"Y8   888   `888  d88' `88b `888P"Y88b  d88(  "8 
+             888     888   888   888   888  888         888    888  888   888  888   888  `"Y88b.  
+             888     888   888   888   888  888   .o8   888 .  888  888   888  888   888  o.  )88b 
+            o888o    `V88V"V8P' o888o o888o `Y8bod8P'   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
+        
+        -->
         <collection name="functions">         
             <!-- Signature -->
             <scope name="elm.functions.signature">
@@ -124,6 +142,7 @@
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="values" />
                     <include syntax="self" collection="types" />
                 </subscopes>
             </scope>
@@ -144,24 +163,53 @@
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="values" />
                     <include syntax="self" collection="types" />
                 </subscopes>
             </scope>
         </collection>
         
-        <!-- Values -->
+        <!--
+                                   oooo                                 
+                                   `888                                 
+             oooo    ooo  .oooo.    888  oooo  oooo   .ooooo.   .oooo.o 
+              `88.  .8'  `P  )88b   888  `888  `888  d88' `88b d88(  "8 
+               `88..8'    .oP"888   888   888   888  888ooo888 `"Y88b.  
+                `888'    d8(  888   888   888   888  888    .o o.  )88b 
+                 `8'     `Y888""8o o888o  `V88V"V8P' `Y8bod8P' 8""888P' 
+
+        -->
         <collection name="values">
             <include syntax="self" collection="strings" />
-            <scope name="elm.value.boolean">
+            <scope name="elm.value.types">
                 <strings>
+                    <string>Just</string>
+                    <string>Nothing</string>
                     <string>True</string>
                     <string>False</string>
+                    <string>Char</string>
+                    <string>Float</string>
+                    <string>Int</string>
+                    <string>List</string>
+                    <string>Maybe</string>
+                    <string>Result</string>
+                    <string>String</string>
+                    <string>Tuple</string>
                 </strings>
+                <capture number="0" name="elm.identifier.constant" />
             </scope>
-            <scope name="elm.value.number.integer">
+            <scope name="elm.value.effects">
+                <strings>
+                    <string>Cmd</string>
+                    <string>Sub</string>
+                </strings>
+                <capture number="0" name="elm.identifier.argument.name" />
+            </scope>
+            <scope name="elm.value.integer">
                 <expression>\b-?\d+\b</expression>
+                <capture number="0" name="elm.value.number.integer" />
             </scope>
-            <scope name="elm.value.number.float">
+            <scope name="elm.value.float">
                 <expression>(-?)(\b\d+\.\d*|\.\d+)</expression>
                 <capture number="1" name="elm.operator" />
                 <capture number="2" name="elm.value.number.float.real" />
@@ -192,7 +240,18 @@
             </scope>
         </collection>
         
-        <!-- Syntax -->
+        <!--
+                                                 .                         
+                                               .o8
+             .oooo.o oooo    ooo ooo. .oo.   .o888oo  .oooo.   oooo    ooo 
+            d88(  "8  `88.  .8'  `888P"Y88b    888   `P  )88b   `88b..8P'  
+            `"Y88b.    `88..8'    888   888    888    .oP"888     Y888'    
+            o.  )88b    `888'     888   888    888 . d8(  888   .o8"'88b   
+            8""888P'     .8'     o888o o888o   "888" `Y888""8o o88'   888o 
+                    .o..P'                                                
+                    `Y8P'
+                    
+        -->
         <collection name="syntax">
             <scope name="elm.bracket">
                 <expression>[\(\[\)\]]</expression>
