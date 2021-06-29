@@ -49,7 +49,7 @@
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
-      "title": "elm-format executable",
+      "title": "elm-format binary",
       "type": "path",
       "relative": true
     }
