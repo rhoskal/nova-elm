@@ -246,6 +246,7 @@
                 <strings>
                     <string>Cmd</string>
                     <string>Sub</string>
+                    <string>Debug</string>
                 </strings>
                 <capture number="0" name="elm.identifier.argument.name" />
             </scope>
