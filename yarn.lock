@@ -1979,10 +1979,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ts-pattern@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.1.7.tgz#c4aa242235337a82c37707fa3518293fb659ecdb"
-  integrity sha512-HGItgT+nbmBqnj5Rp82QT2CaHzSfowwkX0P6tHZsy++VsdziWqQDJ8lCEqd00GlgxJA0tDwYKOD19pSwD7jRMA==
+ts-pattern@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.2.1.tgz#92eb3cf6589579c3b9b7124bdda0557b5d485f7f"
+  integrity sha512-JmcPe/0c9yRLyMga3nxyjEXOB8QXJkjJo2OAp78eHVD0HjWU9WWtKiazxF+Uz6ZFrBkFnwFZFEJrxT0uEo6Jrg==
 
 tsconfig-paths@^3.9.0:
   version "3.9.0"
