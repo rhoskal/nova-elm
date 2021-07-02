@@ -2,12 +2,54 @@
   "name": "nova-elm",
   "version": "0.1.0",
   "description": "Provides syntax highlighting and autocompletion for Elm",
-  "main": "index.js",
+  "main": "",
   "author": "Hans Hoffman",
   "license": "MIT",
   "repository": "https://github.com/hansjhoffman/nova-elm",
   "bugs": {
     "url": "https://github.com/hansjhoffman/nova-elm/issues"
   },
-  "homepage": "https://github.com/hansjhoffman/nova-elm#readme"
+  "homepage": "https://github.com/hansjhoffman/nova-elm#readme",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
+    "format": "prettier --write 'src/**/*.ts'",
+    "lint": "eslint 'src/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts' --fix",
+    "prepare": "husky install",
+    "watch": "watch 'yarn run build' src"
+  },
+  "engines": {
+    "node": ">=12.17.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/nova-editor-node": "^4.1.3",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "fp-ts": "^2.10.5",
+    "husky": "^6.0.0",
+    "io-ts": "^2.2.16",
+    "lint-staged": "^11.0.0",
+    "nova-extension-utils": "^1.4.0",
+    "prettier": "^2.3.2",
+    "rollup": "^2.52.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "ts-pattern": "^3.1.7",
+    "typescript": "^4.3.5",
+    "watch": "^1.0.2"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "resolutions": {
+    "tslib": "^2.1.0"
+  }
 }

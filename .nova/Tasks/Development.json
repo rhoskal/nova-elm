@@ -1,0 +1,14 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "nix-shell --run \"yarn build\""
+    },
+    "run" : {
+      "enabled" : true,
+      "script" : "nix-shell --run \"yarn watch\""
+    }
+  },
+  "identifier" : "4EC7BE03-45C3-411D-8536-89A5451EEB67",
+  "openLogOnRun" : "fail"
+}

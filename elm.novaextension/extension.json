@@ -23,58 +23,109 @@
 
   "config": [
     {
-      "key": "hansjhoffman.elm.config.formatOnSave",
-      "title": "Format on save",
-      "description": "When saving, use `elm-format` to format document. Requires the `elm-format` binary path to be set.",
-      "type": "boolean",
-      "default": false
+      "key": "hansjhoffman.elm.config.elmPath",
+      "title": "Elm Path",
+      "description": "The path to your elm binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
-      "title": "elm-format",
-      "description": "Location of the elm-format binary.",
+      "title": "Elm Format Path",
+      "description": "The path to your elm-format binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
       "type": "path"
     },
     {
-      "key": "hansjhoffman.elm.config.elmLanguageServerPath",
-      "title": "elm-language-server",
-      "description": "Location of the language server binary.",
+      "key": "hansjhoffman.elm.config.elmReviewPath",
+      "title": "Elm Review Path",
+      "description": "The path to your elm-review binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
       "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTestPath",
+      "title": "Elm Test Path",
+      "description": "The path to your elm-test binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewDiagnostics",
+      "title": "Elm Review Diagnostics",
+      "description": "Set severity or disable linting diagnostics for elm-review.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTrace",
+      "title": "LS Tracing",
+      "description": "Traces the communication between Nova and the language server.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.disableLSDiagnostics",
+      "title": "Disable Language Server Diagnostics",
+      "description": "Disable linting diagnostics from the language server.",
+      "type": "boolean",
+      "default": false
     }
   ],
 
   "configWorkspace": [
     {
-      "key": "hansjhoffman.elm.config.formatDocumentOnSave",
-      "title": "Format document on save",
-      "description": "Run Format Document command on file save.",
-      "type": "boolean",
-      "values": [
-        ["null", "Inherit from Global Settings"],
-        ["false", "Disable"],
-        ["true", "Enable"]
-      ],
-      "default": "null"
+      "key": "hansjhoffman.elm.config.elmPath",
+      "title": "Elm Path",
+      "description": "The path to your elm binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
-      "title": "elm-format binary",
-      "type": "path",
-      "relative": true
+      "title": "Elm Format Path",
+      "description": "The path to your elm-format binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
     },
     {
-      "key": "hansjhoffman.elm.config.elmLanguageServerPath",
-      "title": "elm-language-server binary",
-      "type": "path",
-      "relative": true
+      "key": "hansjhoffman.elm.config.elmReviewPath",
+      "title": "Elm Review Path",
+      "description": "The path to your elm-review binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTestPath",
+      "title": "Elm Test Path",
+      "description": "The path to your elm-test binary. Should be empty by default, in that case it will assume the name and try to first get it from a local npm installation or a global one. If you sent it manually, it will not try to load from the npm folder.",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewDiagnostics",
+      "title": "Elm Review Diagnostics",
+      "description": "Set severity or disable linting diagnostics for elm-review.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTrace",
+      "title": "LS Tracing",
+      "description": "Traces the communication between Nova and the language server.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.disableLSDiagnostics",
+      "title": "Disable Language Server Diagnostics",
+      "description": "Disable linting diagnostics from the language server.",
+      "type": "boolean",
+      "default": false
     }
   ],
 
   "commands": {
     "editor": [
       {
-        "title": "Jump to Definition",
-        "command": "elm.command.jumpToDefinition",
+        "title": "Go to Definition",
+        "command": "hansjhoffman.elm.command.goToDefinition",
         "when": "editorHasFocus",
         "filters": {
           "syntaxes": ["elm"]
@@ -82,7 +133,7 @@
       },
       {
         "title": "Format Document",
-        "command": "elm.command.formatDocument",
+        "command": "hansjhoffman.elm.command.formatDocument",
         "when": "editorHasFocus",
         "filters": {
           "syntaxes": ["elm"]
