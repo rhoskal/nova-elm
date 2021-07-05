@@ -191,6 +191,9 @@
         -->
         <collection name="type-definition">
             <scope>
+                <symbol type="type">
+                    <context behavior="subtree" foldable="false" />
+                </symbol>
                 <starts-with>
                     <expression>^(type)</expression>
                     <capture number="1" name="elm.keyword" />
