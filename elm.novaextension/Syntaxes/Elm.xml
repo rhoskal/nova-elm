@@ -132,9 +132,6 @@
         <collection name="functions">         
             <!-- Signature -->
             <scope name="elm.functions.signature">
-                <symbol type="function">
-                    <context behavior="subtree" foldable="false" />
-                </symbol>
                 <starts-with>
                     <expression>^(port\s+)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*)\s+(\:)</expression>
                     <capture number="1" name="elm.keyword" />
