@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  preflight:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,10 +25,16 @@ jobs:
             extra-platforms = aarch64-linux
 
       - name: Install deps
-        run: nix-shell --pure --run "yarn install"
+        run: nix-shell --pure --run "make deps"
+
+      - name: Format
+        run: nix-shell --pure --run "make format"
+
+      - name: Lint
+        run: nix-shell --pure --run "make lint"
 
       - name: Build
-        run: nix-shell --pure --run "yarn build"
+        run: nix-shell --pure --run "make build"
 
       - name: Ensure clean
-        run: nix-shell --pure --run "git status --porcelain"
+        run: nix-shell --pure --run "git status --porcelain; test -z '$(git status --porcelain)'"
