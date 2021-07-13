@@ -31,7 +31,7 @@ jobs:
         run: nix-shell --pure --run "make format"
 
       - name: Lint
-        run: nix-shell --poure --run "make lint"
+        run: nix-shell --pure --run "make lint"
 
       - name: Build
         run: nix-shell --pure --run "make build"
