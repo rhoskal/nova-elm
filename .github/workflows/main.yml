@@ -25,10 +25,10 @@ jobs:
             extra-platforms = aarch64-linux
 
       - name: Install deps
-        run: nix-shell --pure --run "yarn install"
+        run: nix-shell --pure --run "make deps"
 
       - name: Build
-        run: nix-shell --pure --run "yarn build"
+        run: nix-shell --pure --run "make build"
 
       - name: Ensure clean
-        run: nix-shell --pure --run "git status --porcelain"
+        run: nix-shell --pure --run "git status --porcelain; test -z '$(git status --porcelain)'"

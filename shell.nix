@@ -1,16 +1,9 @@
-{ pkgs ? import <nixpkgs> {} }:
+  { pkgs ? import <nixpkgs> { } }:
 
 with pkgs;
 
 let
-  basePackages = [
-    git
-    nodejs
-    yarn
-  ];
+  basePackages = [ git nixfmt nodejs yarn ];
 
   inputs = basePackages;
-in
-  mkShell {
-    buildInputs = inputs;
-  }
+in mkShell { buildInputs = inputs; }

@@ -7,7 +7,7 @@ updates:
       time: "01:00"
     open-pull-requests-limit: 10
   - package-ecosystem: npm
-    directory: "/typescript.novaextension"
+    directory: "/elm.novaextension"
     schedule:
       interval: monthly
       time: "01:00"
