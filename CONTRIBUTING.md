@@ -2,7 +2,7 @@
 
 Hello! 👋
 
-Thanks for checking out the contributing guide for elm-pages! Here are some tips and guidelines to make things as smooth as possible.
+Thanks for checking out the contributing guide for nova-elm! Here are some tips and guidelines to make things as smooth as possible.
 
 This project relies heavily on Typescript and the [fp-ts](https://gcanti.github.io/fp-ts/) ecosystem. FP for the win! 💪
 
