@@ -13,7 +13,7 @@
     
     <indentation>
         <increase>
-            <expression>(case|if|else|let|-&gt;).*</expression>
+            <expression>(case|of|if|else|let|-&gt;).*</expression>
         </increase>
         <decrease>
             <expression>^\s+(in)\b|\s+</expression>
@@ -191,11 +191,30 @@
             o888o `Y8bod88P" `Y8bod8P' o888o o888o   "888" o888o o888o   o888o `Y8bod8P' d888b    8""888P' 
         -->
         <collection name="identifiers">
+            <include syntax="self" collection="elm.helpers.type" />
+            <scope name="elm.identifier.function.type-annotation">
+                <expression>([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
+            </scope>
+            <scope name="elm.function">
+                <starts-with>
+                    <expression>^([a-z][A-Za-z0-9_]+)</expression>
+                    <capture number="0" name="elm.identifier.function" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=\=$)</expression>
+                </ends-with>
+                <subscopes>
+                    <scope name="elm.function.argument">
+                        <expression>\b([a-z][A-Za-z0-9_]+)</expression>
+                        <capture number="1" name="elm.identifier.argument" />
+                    </scope>
+                    <include syntax="self" collection="elm.helpers.type" />
+                </subscopes>
+            </scope>
+        </collection>
+        <collection name="elm.helpers.type">
             <scope name="elm.identifier.type">
                 <expression>\b(?&lt;![a-z0-9_&quot;])([A-Z][\w\x{9F}-\x{10FFFF}]*)\b</expression>
-            </scope>
-            <scope name="elm.identifier.function.port">
-                <expression>([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
             </scope>
         </collection>
         
