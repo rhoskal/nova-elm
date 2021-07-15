@@ -2,14 +2,17 @@
   "name": "nova-elm",
   "version": "0.1.0",
   "description": "Provides syntax highlighting and autocompletion for Elm",
-  "main": "",
+  "main": "src/index.ts",
   "author": "Hans Hoffman",
   "license": "MIT",
-  "repository": "https://github.com/hansjhoffman/nova-elm",
+  "repository": "git@github.com:hansjhoffman/nova-elm.git",
   "bugs": {
     "url": "https://github.com/hansjhoffman/nova-elm/issues"
   },
   "homepage": "https://github.com/hansjhoffman/nova-elm#readme",
+  "engines": {
+    "node": ">=12.17.0"
+  },
   "scripts": {
     "build": "rollup --config rollup.config.ts --configPlugin typescript",
     "compile": "tsc",
@@ -18,9 +21,6 @@
     "lint:fix": "eslint 'src/**/*.ts' --fix",
     "prepare": "is-ci || husky install",
     "watch": "watch 'yarn run build' src"
-  },
-  "engines": {
-    "node": ">=12.17.0"
   },
   "dependencies": {
     "fp-ts": "^2.10.5",
