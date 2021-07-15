@@ -1,6 +1,5 @@
-## Version 0.1.0
+## v0.1.0 - 2021-07-15
 
-Initial release
+### Initial release 🎉
 
-- Syntax support
-- Language server support
+- Basic syntax highlighting
