@@ -191,14 +191,11 @@
             o888o `Y8bod88P" `Y8bod8P' o888o o888o   "888" o888o o888o   o888o `Y8bod8P' d888b    8""888P' 
         -->
         <collection name="identifiers">
-            <scope name="elm.identifier.type.effect">
-                <expression>(Cmd|Sub|Debug)</expression>
-                <!-- <strings>
-                    <string>Cmd</string>
-                    <string>Sub</string>
-                    <string>Debug</string>
-                </strings>
-                <capture number="0" name="elm.identifier.type" /> -->
+            <scope name="elm.identifier.type">
+                <expression>\b(?&lt;![a-z0-9_&quot;])([A-Z][\w\x{9F}-\x{10FFFF}]*)\b</expression>
+            </scope>
+            <scope name="elm.identifier.function.port">
+                <expression>([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
             </scope>
         </collection>
         
