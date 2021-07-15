@@ -115,6 +115,11 @@
                     </scope>
                 </subscopes>
             </scope>
+            <scope name="elm.port">
+                <expression>^(port\s)?([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
+                <capture number="1" name="elm.keyword" />
+                <capture number="2" name="elm.identifier.function.type-annotation" />
+            </scope>
         </collection>
         
         <!-- 
@@ -180,7 +185,7 @@
                 <expression>\b(\d+\.\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer">
-                <expression>\b(?!0\d)(\d+)\b</expression>
+                <expression>\s(?!0\d+)(\-?\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer.hexadecimal">
                 <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
