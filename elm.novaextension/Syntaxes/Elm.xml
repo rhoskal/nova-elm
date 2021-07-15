@@ -98,6 +98,23 @@
             `Y8bod88P" `Y8bod8P' o888o   o888o o888o o888o o888o   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
         -->
         <collection name="definitions">
+            <scope name="elm.import">
+                <starts-with>
+                    <expression>(?=^(import|port\s+module|module))</expression>
+                    <capture number="0" name="elm.keyword" />
+                </starts-with>
+                <ends-with>
+                    <expression>$</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.import.function">
+                        <expression>\b([a-z][A-Za-z0-9]*)</expression>
+                        <capture number="1" name="elm.identifier.function.name" />
+                    </scope>
+                </subscopes>
+            </scope>
         </collection>
         
         <!-- 
@@ -148,6 +165,14 @@
                     <string>False</string>
                 </strings>
             </scope>
+            <scope name="elm.value.symbols.type-constructor">
+                <strings>
+                    <string>Just</string>
+                    <string>Nothing</string>
+                    <string>Ok</string>
+                    <string>Err</string>
+                </strings>
+            </scope>
             <scope name="elm.value.number.float.exponent">
                 <expression>\b[0-9][0-9]*(\.[0-9][0-9]*)?e[+-]?[0-9]+\b</expression>
             </scope>
@@ -172,6 +197,7 @@
                 <subscopes>
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="values" />
+                    <include syntax="self" collection="elm.helpers.type" />
                     <include syntax="self" collection="strings" />
                     <scope name="elm.comma">
                         <expression>,</expression>
