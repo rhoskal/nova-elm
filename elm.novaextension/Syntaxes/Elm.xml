@@ -110,7 +110,7 @@
                     <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.import.function">
-                        <expression>\b([a-z][A-Za-z0-9]*)</expression>
+                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
                         <capture number="1" name="elm.identifier.function.name" />
                     </scope>
                 </subscopes>
@@ -199,6 +199,7 @@
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <include syntax="self" collection="strings" />
+                    <include syntax="self" collection="syntax" />
                     <scope name="elm.comma">
                         <expression>,</expression>
                     </scope>
@@ -240,7 +241,7 @@
         </collection>
         <collection name="elm.helpers.type">
             <scope name="elm.identifier.type">
-                <expression>\b(?&lt;![a-z0-9_&quot;])([A-Z][\w\x{9F}-\x{10FFFF}]*)\b</expression>
+                <expression>\b(?&lt;![a-z0-9_&quot;])([A-Z][A-Za-z0-9_]*)\b</expression>
             </scope>
         </collection>
         
