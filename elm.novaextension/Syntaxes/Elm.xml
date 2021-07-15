@@ -170,7 +170,7 @@
                     <string>False</string>
                 </strings>
             </scope>
-            <scope name="elm.value.symbols.type-constructor">
+            <scope name="elm.value.symbol.type-constructor">
                 <strings>
                     <string>Just</string>
                     <string>Nothing</string>
