@@ -9,7 +9,6 @@
 .pnp.js
 
 # builds
-/elm.novaextension/Scripts
 
 # logs
 npm-debug.log*
