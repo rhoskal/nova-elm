@@ -11,6 +11,15 @@
         <extension priority="1.0">elm</extension>
     </detectors>
     
+    <indentation>
+        <increase>
+            <expression>(case|if|else|let|-&gt;).*</expression>
+        </increase>
+        <decrease>
+            <expression>^\s+(in)\b|\s+</expression>
+        </decrease>
+    </indentation>
+    
     <comments>
         <single>
             <expression>--</expression>
@@ -39,20 +48,13 @@
         <pair open="&quot;" close="&quot;" />
     </surrounding-pairs>
     
-    <indentation>
-        <increase>
-            <expression>(case|if|else|let|-&gt;).*</expression>
-        </increase>
-        <decrease>
-            <expression>^\s+(in)\b|\s+</expression>
-        </decrease>
-    </indentation>
-    
     <scopes>
         <include syntax="self" collection="comments" />
-        <include syntax="self" collection="imports" />
-        <include syntax="self" collection="type-definition" />
-        <include syntax="self" collection="functions" />
+        <include syntax="self" collection="definitions" />
+        <include syntax="self" collection="keywords" />
+        <include syntax="self" collection="values" />
+        <include syntax="self" collection="identifiers" />
+        <include syntax="self" collection="syntax" />
     </scopes>
 
     <collections>
@@ -64,7 +66,6 @@
             888       888   888  888   888   888   888   888   888  888ooo888  888   888    888   `"Y88b.  
             888   .o8 888   888  888   888   888   888   888   888  888    .o  888   888    888 . o.  )88b 
             `Y8bod8P' `Y8bod8P' o888o o888o o888o o888o o888o o888o `Y8bod8P' o888o o888o   "888" 8""888P' 
-
         -->
         <collection name="comments">
             <scope name="elm.comment.single" spell-check="true">
@@ -72,7 +73,6 @@
                 <capture number="1" name="elm.punctuation.definition.begin" />
                 <capture number="2" name="elm.comment.content" />
             </scope>
-            
             <scope name="elm.comment.multiline" spell-check="true">
                 <symbol type="comment">
                     <context behavior="subtree" />
@@ -88,191 +88,130 @@
             </scope>
         </collection>
         
-        <!--
-             o8o                                                      .            
-             `"'                                                    .o8            
-            oooo  ooo. .oo.  .oo.   oo.ooooo.   .ooooo.  oooo d8b .o888oo  .oooo.o 
-            `888  `888P"Y88bP"Y88b   888' `88b d88' `88b `888""8P   888   d88(  "8 
-             888   888   888   888   888   888 888   888  888       888   `"Y88b.  
-             888   888   888   888   888   888 888   888  888       888 . o.  )88b 
-            o888o o888o o888o o888o  888bod8P' `Y8bod8P' d888b      "888" 8""888P' 
-                                     888                                           
-                                    o888o                                          
-
+        <!-- 
+                  .o8             .o88o.  o8o               o8o      .    o8o                                 
+                 "888             888 `"  `"'               `"'    .o8    `"'                                 
+             .oooo888   .ooooo.  o888oo  oooo  ooo. .oo.   oooo  .o888oo oooo   .ooooo.  ooo. .oo.    .oooo.o 
+            d88' `888  d88' `88b  888    `888  `888P"Y88b  `888    888   `888  d88' `88b `888P"Y88b  d88(  "8 
+            888   888  888ooo888  888     888   888   888   888    888    888  888   888  888   888  `"Y88b.  
+            888   888  888    .o  888     888   888   888   888    888 .  888  888   888  888   888  o.  )88b 
+            `Y8bod88P" `Y8bod8P' o888o   o888o o888o o888o o888o   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
         -->
-        <collection name="imports">
-            <scope name="elm.import">
+        <collection name="definitions">
+        </collection>
+        
+        <!-- 
+            oooo                                                                        .o8           
+            `888                                                                       "888           
+             888  oooo   .ooooo.  oooo    ooo oooo oooo    ooo  .ooooo.  oooo d8b  .oooo888   .oooo.o 
+             888 .8P'   d88' `88b  `88.  .8'   `88. `88.  .8'  d88' `88b `888""8P d88' `888  d88(  "8 
+             888888.    888ooo888   `88..8'     `88..]88..8'   888   888  888     888   888  `"Y88b.  
+             888 `88b.  888    .o    `888'       `888'`888'    888   888  888     888   888  o.  )88b 
+            o888o o888o `Y8bod8P'     .8'         `8'  `8'     `Y8bod8P' d888b    `Y8bod88P" 8""888P' 
+                                  .o..P'                                                              
+                                  `Y8P'                                                               
+        -->
+        <collection name="keywords">
+            <scope name="elm.keyword">
+                <strings>
+                    <string>alias</string>
+                    <string>as</string>
+                    <string>case</string>
+                    <string>else</string>
+                    <string>exposing</string>
+                    <string>if</string>
+                    <string>import</string>
+                    <string>in</string>
+                    <string>let</string>
+                    <string>module</string>
+                    <string>of</string>
+                    <string>port</string>
+                    <string>then</string>
+                    <string>type</string>
+                </strings>
+            </scope>
+        </collection>
+        
+        <!--
+                                  oooo                                 
+                                  `888                                 
+            oooo    ooo  .oooo.    888  oooo  oooo   .ooooo.   .oooo.o 
+             `88.  .8'  `P  )88b   888  `888  `888  d88' `88b d88(  "8 
+              `88..8'    .oP"888   888   888   888  888ooo888 `"Y88b.  
+               `888'    d8(  888   888   888   888  888    .o o.  )88b 
+                `8'     `Y888""8o o888o  `V88V"V8P' `Y8bod8P' 8""888P'                                  
+        -->
+        <collection name="values">
+            <scope name="elm.value.boolean">
+                <strings>
+                    <string>True</string>
+                    <string>False</string>
+                </strings>
+            </scope>
+            <scope name="elm.value.number.float.exponent">
+                <expression>\b[0-9][0-9]*(\.[0-9][0-9]*)?e[+-]?[0-9]+\b</expression>
+            </scope>
+            <scope name="elm.value.number.float">
+                <expression>\b(\d+\.\d+)\b</expression>
+            </scope>
+            <scope name="elm.value.number.integer">
+                <expression>\b(?!0\d)(\d+)\b</expression>
+            </scope>
+            <scope name="elm.value.number.integer.hexadecimal">
+                <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
+            </scope>
+            <scope name="elm.collection.list">
                 <starts-with>
-                    <expression>(?=^(import|port\s+module|module))</expression>
+                    <expression>\[</expression>
+                    <capture number="0" name="elm.bracket" />
                 </starts-with>
                 <ends-with>
-                    <expression>$</expression>
+                    <expression>\]</expression>
+                    <capture number="0" name="elm.bracket" />
                 </ends-with>
                 <subscopes>
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="types" />
-                    <scope name="elm.function.name">
-                        <expression>\b([a-zA-ZÀ-ÖØ-öø-ÿ0-9]*)</expression>
-                        <capture number="1" name="elm.identifier.function.name" />
+                    <include syntax="self" collection="comments" />
+                    <include syntax="self" collection="values" />
+                    <include syntax="self" collection="strings" />
+                    <scope name="elm.comma">
+                        <expression>,</expression>
                     </scope>
                 </subscopes>
             </scope>
-        </collection>
-
-        <!-- 
-             .o88o.                                       .    o8o                                 
-             888 `"                                     .o8    `"'                                 
-            o888oo  oooo  oooo  ooo. .oo.    .ooooo.  .o888oo oooo   .ooooo.  ooo. .oo.    .oooo.o 
-             888    `888  `888  `888P"Y88b  d88' `"Y8   888   `888  d88' `88b `888P"Y88b  d88(  "8 
-             888     888   888   888   888  888         888    888  888   888  888   888  `"Y88b.  
-             888     888   888   888   888  888   .o8   888 .  888  888   888  888   888  o.  )88b 
-            o888o    `V88V"V8P' o888o o888o `Y8bod8P'   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
-
-        -->
-        <collection name="functions">         
-            <!-- Signature -->
-            <scope name="elm.functions.signature">
-                <starts-with>
-                    <expression>^(port\s+)?([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*)\s+(\:)</expression>
-                    <capture number="1" name="elm.keyword" />
-                    <capture number="2" name="elm.identifier.function.name" />
-                    <capture number="3" name="elm.keyword" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=^\S)</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="comments" />
-                    <include syntax="self" collection="strings" />
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="values" />
-                    <include syntax="self" collection="types" />
-                    <include syntax="self" collection="syntax" />
-                </subscopes>
-            </scope>
-            
-            <!-- Function -->
-            <scope name="elm.functions.block">
-                <symbol type="function">
-                    <context behavior="subtree" />
-                </symbol>
-                <starts-with>
-                    <expression>^(?| ([a-z][A-Za-zÀ-ÖØ-öø-ÿ0-9]*))</expression>
-                    <capture number="1" name="elm.identifier.function.name" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=^\n\n)</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="comments" />
-                    <include syntax="self" collection="strings" />
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="values" />
-                    <include syntax="self" collection="types" />
-                    <include syntax="self" collection="syntax" />
-                </subscopes>
-            </scope>
-        </collection>
-        
-        <!-- 
-                .                                             
-              .o8                                             
-            .o888oo oooo    ooo oo.ooooo.   .ooooo.   .oooo.o 
-              888    `88.  .8'   888' `88b d88' `88b d88(  "8 
-              888     `88..8'    888   888 888ooo888 `"Y88b.  
-              888 .    `888'     888   888 888    .o o.  )88b 
-              "888"     .8'      888bod8P' `Y8bod8P' 8""888P' 
-                    .o..P'       888                          
-                    `Y8P'       o888o                         
-
-        -->
-        <collection name="type-definition">
-            <scope>
-                <symbol type="type">
-                    <context behavior="subtree" foldable="false" />
-                </symbol>
-                <starts-with>
-                    <expression>^(type)</expression>
-                    <capture number="1" name="elm.keyword" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=^\S)</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="values" />
-                    <include syntax="self" collection="types" />
-                    <include syntax="self" collection="comments" />
-                </subscopes>
-            </scope>
-        </collection>
-        
-        <collection name="types">
-            <scope name="elm.type.usage">
-                <expression>\b([A-ZÀ-Ö][a-zA-ZÀ-ÖØ-öø-ÿ0-9]*)</expression>
-                <capture number="1" name="elm.identifier.type.name" />
-            </scope>
-        </collection>
-        
-        <!--
-                                   oooo                                 
-                                   `888                                 
-             oooo    ooo  .oooo.    888  oooo  oooo   .ooooo.   .oooo.o 
-              `88.  .8'  `P  )88b   888  `888  `888  d88' `88b d88(  "8 
-               `88..8'    .oP"888   888   888   888  888ooo888 `"Y88b.  
-                `888'    d8(  888   888   888   888  888    .o o.  )88b 
-                 `8'     `Y888""8o o888o  `V88V"V8P' `Y8bod8P' 8""888P' 
-
-        -->
-        <collection name="values">
             <include syntax="self" collection="strings" />
-            <scope name="elm.value.types">
-                <strings>
-                    <string>Just</string>
-                    <string>Nothing</string>
-                    <string>True</string>
-                    <string>False</string>
-                    <string>Char</string>
-                    <string>Float</string>
-                    <string>Int</string>
-                    <string>List</string>
-                    <string>Maybe</string>
-                    <string>Result</string>
-                    <string>String</string>
-                    <string>Tuple</string>
-                </strings>
-                <capture number="0" name="elm.identifier.constant" />
-            </scope>
-            <scope name="elm.value.effects">
-                <strings>
+        </collection>
+        
+        <!-- 
+             o8o        .o8                            .    o8o   .o88o.  o8o                              
+             `"'       "888                          .o8    `"'   888 `"  `"'                              
+            oooo   .oooo888   .ooooo.  ooo. .oo.   .o888oo oooo  o888oo  oooo   .ooooo.  oooo d8b  .oooo.o 
+            `888  d88' `888  d88' `88b `888P"Y88b    888   `888   888    `888  d88' `88b `888""8P d88(  "8 
+             888  888   888  888ooo888  888   888    888    888   888     888  888ooo888  888     `"Y88b.  
+             888  888   888  888    .o  888   888    888 .  888   888     888  888    .o  888     o.  )88b 
+            o888o `Y8bod88P" `Y8bod8P' o888o o888o   "888" o888o o888o   o888o `Y8bod8P' d888b    8""888P' 
+        -->
+        <collection name="identifiers">
+            <scope name="elm.identifier.type.effect">
+                <expression>(Cmd|Sub|Debug)</expression>
+                <!-- <strings>
                     <string>Cmd</string>
                     <string>Sub</string>
                     <string>Debug</string>
                 </strings>
-                <capture number="0" name="elm.identifier.argument.name" />
-            </scope>
-            <scope name="elm.value.integer">
-                <expression>\b-?\d+\b</expression>
-                <capture number="0" name="elm.value.number.integer" />
-            </scope>
-            <scope name="elm.value.float">
-                <expression>(-?)(\b\d+\.\d*|\.\d+)</expression>
-                <capture number="1" name="elm.operator" />
-                <capture number="2" name="elm.value.number.float.real" />
+                <capture number="0" name="elm.identifier.type" /> -->
             </scope>
         </collection>
         
-        <!--
-                         .             o8o                                  
-                       .o8             `"'                                  
-             .oooo.o .o888oo oooo d8b oooo  ooo. .oo.    .oooooooo  .oooo.o 
+        <!-- 
+                        .             o8o                                  
+                      .o8             `"'                                  
+            .oooo.o .o888oo oooo d8b oooo  ooo. .oo.    .oooooooo  .oooo.o 
             d88(  "8   888   `888""8P `888  `888P"Y88b  888' `88b  d88(  "8 
             `"Y88b.    888    888      888   888   888  888   888  `"Y88b.  
             o.  )88b   888 .  888      888   888   888  `88bod8P'  o.  )88b 
             8""888P'   "888" d888b    o888o o888o o888o `8oooooo.  8""888P' 
                                                         d"     YD           
                                                         "Y88888P'           
-
         -->
         <collection name="strings">
             <scope name="elm.string.multiline">
@@ -318,57 +257,108 @@
             </scope>
         </collection>
         
-        <!--
+        <!-- 
                                                  .                         
-                                               .o8
-             .oooo.o oooo    ooo ooo. .oo.   .o888oo  .oooo.   oooo    ooo 
+                                               .o8                         
+            .oooo.o oooo    ooo ooo. .oo.   .o888oo  .oooo.   oooo    ooo 
             d88(  "8  `88.  .8'  `888P"Y88b    888   `P  )88b   `88b..8P'  
             `"Y88b.    `88..8'    888   888    888    .oP"888     Y888'    
             o.  )88b    `888'     888   888    888 . d8(  888   .o8"'88b   
             8""888P'     .8'     o888o o888o   "888" `Y888""8o o88'   888o 
-                    .o..P'                                                
-                    `Y8P'
-
+                      .o..P'                                                
+                      `Y8P'
         -->
         <collection name="syntax">
+            <scope name="elm.block.records">
+                <symbol type="block">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>\{</expression>
+                    <capture number="0" name="elm.bracket" />
+                </starts-with>
+                <ends-with>
+                    <expression>\}</expression>
+                    <capture number="0" name="elm.bracket" />
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" />
+                </subscopes>
+            </scope>
             <scope name="elm.bracket">
-                <expression>[\(\[\)\]]</expression>
+                <expression>(\[ | \])</expression>
+            </scope>
+            <scope name="elm.bracket">
+                <expression>(\( | \))</expression>
+            </scope>
+            <scope name="elm.bracket">
+                <expression>(\{ | \})</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>\s+(\+ | \- | \* | \+\+ | \^ | \/ | \/\/ | \=\= | \/\= | &lt; | &gt; | &lt;&lt; | &gt;&gt; | &lt;\= | &gt;\= | &amp;&amp; | \|\|)\s+</expression>
-                <capture number="1" name="elm.keyword" />
+                <expression>(\|&gt;)</expression>
             </scope>
-        </collection>
-        
-        <!-- Keywords -->
-        <collection name="keywords">
-            <include syntax="self" collection="punctuation" />
-            <scope name="elm.keyword">
-                <symbol type="keyword" />
-                <strings>
-                    <string>alias</string>
-                    <string>as</string>
-                    <string>case</string>
-                    <string>else</string>
-                    <string>exposing</string>
-                    <string>if</string>
-                    <string>import</string>
-                    <string>in</string>
-                    <string>let</string>
-                    <string>module</string>
-                    <string>of</string>
-                    <string>port</string>
-                    <string>then</string>
-                    <string>type</string>
-                </strings>
+            <scope name="elm.operator">
+                <expression>(&lt;\|)</expression>
             </scope>
-        </collection>
-        
-        <!-- Punctuation -->
-        <collection name="punctuation">
-            <scope name="elm.punctuation">
-                <expression>(\|&gt; | &lt;\| | \. | \= | \s\_ | \\ | \| | \-&gt; | \:)</expression>
-                <capture number="1" name="elm.keyword" />
+            <scope name="elm.operator">
+                <expression>(&lt;&lt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(&gt;&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(&amp;&amp;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(&lt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\=\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\*)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\+)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\-)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\+\+)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(::)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\^)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\/)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\/\/)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\|\|)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\|)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\\)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(\.)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <expression>(:)</expression>
             </scope>
         </collection>
     </collections>
