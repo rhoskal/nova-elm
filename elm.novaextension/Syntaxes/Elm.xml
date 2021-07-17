@@ -190,6 +190,7 @@
             <scope name="elm.value.number.integer.hexadecimal">
                 <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
             </scope>
+            <include syntax="self" collection="strings" />
             <scope name="elm.collection.list">
                 <starts-with>
                     <expression>\[</expression>
@@ -203,14 +204,12 @@
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="elm.helpers.type" />
-                    <include syntax="self" collection="strings" />
                     <include syntax="self" collection="syntax" />
                     <scope name="elm.comma">
                         <expression>,</expression>
                     </scope>
                 </subscopes>
             </scope>
-            <include syntax="self" collection="strings" />
         </collection>
         
         <!-- 
