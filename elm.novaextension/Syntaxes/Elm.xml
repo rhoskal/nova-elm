@@ -100,11 +100,11 @@
         <collection name="definitions">
             <scope name="elm.import">
                 <starts-with>
-                    <expression>(?=^(import|port\s+module|module))</expression>
+                    <expression>^(import|port\s+module|module)</expression>
                     <capture number="0" name="elm.keyword" />
                 </starts-with>
                 <ends-with>
-                    <expression>$</expression>
+                    <expression>(?=^\S)</expression>
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="keywords" />
