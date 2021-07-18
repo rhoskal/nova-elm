@@ -232,8 +232,7 @@
         <collection name="identifiers">
             <include syntax="self" collection="elm.helpers.type" />
             <scope name="elm.identifier.function.type-annotation">
-                <expression>([a-z]\w*)\s(?=\:)</expression>
-                <include syntax="self" />
+                <expression>^([a-z]\w*)\s(?=\:)</expression>
             </scope>
             <scope name="elm.function">
                 <starts-with>
