@@ -98,25 +98,34 @@
             `Y8bod88P" `Y8bod8P' o888o   o888o o888o o888o o888o   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
         -->
         <collection name="definitions">
+            <scope name="elm.infix">
+                <expression>^(infix)\s+\w+\s+(\d+)\s+\((.+)\)\s+(\=)\s+(\w+)$</expression>
+                <capture number="1" name="elm.keyword" />
+                <capture number="2" name="elm.value.number.integer" />
+                <capture number="3" name="elm.operator" />
+                <capture number="4" name="elm.operator" />
+                <capture number="5" name="elm.elm.identifier.function.name" />
+            </scope>
             <scope name="elm.import">
                 <starts-with>
-                    <expression>(?=^(import|port\s+module|module))</expression>
+                    <expression>^(effect|import|module|port\s+module)</expression>
                     <capture number="0" name="elm.keyword" />
                 </starts-with>
                 <ends-with>
-                    <expression>$</expression>
+                    <expression>(?=^\S)</expression>
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="syntax" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.import.function">
-                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                        <expression>\b([a-z]\w*)</expression>
                         <capture number="1" name="elm.identifier.function.name" />
                     </scope>
                 </subscopes>
             </scope>
             <scope name="elm.port">
-                <expression>^(port\s)?([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
+                <expression>^(port\s)?([a-z]\w*)\s(?=\:)</expression>
                 <capture number="1" name="elm.keyword" />
                 <capture number="2" name="elm.identifier.function.type-annotation" />
             </scope>
@@ -150,6 +159,7 @@
                     <string>port</string>
                     <string>then</string>
                     <string>type</string>
+                    <string>where</string>
                 </strings>
             </scope>
         </collection>
@@ -182,14 +192,15 @@
                 <expression>\b[0-9][0-9]*(\.[0-9][0-9]*)?e[+-]?[0-9]+\b</expression>
             </scope>
             <scope name="elm.value.number.float">
-                <expression>\b(\d+\.\d+)\b</expression>
+                <expression>([-]?\d+\.\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer">
-                <expression>\s(?!0\d+)(\-?\d+)\b</expression>
+                <expression>(?&lt;=\s|\()(?!0\d+)(\-?\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer.hexadecimal">
                 <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
             </scope>
+            <include syntax="self" collection="strings" />
             <scope name="elm.collection.list">
                 <starts-with>
                     <expression>\[</expression>
@@ -203,14 +214,12 @@
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="elm.helpers.type" />
-                    <include syntax="self" collection="strings" />
                     <include syntax="self" collection="syntax" />
                     <scope name="elm.comma">
                         <expression>,</expression>
                     </scope>
                 </subscopes>
             </scope>
-            <include syntax="self" collection="strings" />
         </collection>
         
         <!-- 
@@ -225,11 +234,11 @@
         <collection name="identifiers">
             <include syntax="self" collection="elm.helpers.type" />
             <scope name="elm.identifier.function.type-annotation">
-                <expression>^([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
+                <expression>^([a-z]\w*)\s(?=\:)</expression>
             </scope>
             <scope name="elm.function">
                 <starts-with>
-                    <expression>^([a-z][A-Za-z0-9_]+)</expression>
+                    <expression>^([a-z]\w*)</expression>
                     <capture number="0" name="elm.identifier.function" />
                 </starts-with>
                 <ends-with>
@@ -237,7 +246,7 @@
                 </ends-with>
                 <subscopes>
                     <scope name="elm.function.argument">
-                        <expression>\b([a-z][A-Za-z0-9_]+)</expression>
+                        <expression>\b([a-z]\w*)</expression>
                         <capture number="1" name="elm.identifier.argument" />
                     </scope>
                     <include syntax="self" collection="elm.helpers.type" />
