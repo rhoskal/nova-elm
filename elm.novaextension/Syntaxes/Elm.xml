@@ -118,13 +118,13 @@
                     <include syntax="self" collection="keywords" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.import.function">
-                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                        <expression>\b([a-z]\w*)</expression>
                         <capture number="1" name="elm.identifier.function.name" />
                     </scope>
                 </subscopes>
             </scope>
             <scope name="elm.port">
-                <expression>^(port\s)?([a-z][A-Za-z0-9_]+)\s(?=\:)</expression>
+                <expression>^(port\s)?([a-z]\w*)\s(?=\:)</expression>
                 <capture number="1" name="elm.keyword" />
                 <capture number="2" name="elm.identifier.function.type-annotation" />
             </scope>
