@@ -193,7 +193,7 @@
                 <expression>([-]?\d+\.\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer">
-                <expression>\s(?!0\d+)(\-?\d+)\b</expression>
+                <expression>(?&lt;=\s|\()(?!0\d+)(\-?\d+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer.hexadecimal">
                 <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
