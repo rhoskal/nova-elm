@@ -98,6 +98,14 @@
             `Y8bod88P" `Y8bod8P' o888o   o888o o888o o888o o888o   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
         -->
         <collection name="definitions">
+            <scope name="elm.infix">
+                <expression>^(infix)\s+\w+\s+(\d+)\s+\((.+)\)\s+(\=)\s+(\w+)$</expression>
+                <capture number="1" name="elm.keyword" />
+                <capture number="2" name="elm.value.number.integer" />
+                <capture number="3" name="elm.operator" />
+                <capture number="4" name="elm.operator" />
+                <capture number="5" name="elm.elm.identifier.function.name" />
+            </scope>
             <scope name="elm.import">
                 <starts-with>
                     <expression>^(import|port\s+module|module)</expression>
