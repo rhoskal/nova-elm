@@ -236,7 +236,7 @@
             </scope>
             <scope name="elm.function">
                 <starts-with>
-                    <expression>^([a-z][A-Za-z0-9_]+)</expression>
+                    <expression>^([a-z]\w*)</expression>
                     <capture number="0" name="elm.identifier.function" />
                 </starts-with>
                 <ends-with>
@@ -244,7 +244,7 @@
                 </ends-with>
                 <subscopes>
                     <scope name="elm.function.argument">
-                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                        <expression>\b([a-z]\w*)</expression>
                         <capture number="1" name="elm.identifier.argument" />
                     </scope>
                     <include syntax="self" collection="elm.helpers.type" />
