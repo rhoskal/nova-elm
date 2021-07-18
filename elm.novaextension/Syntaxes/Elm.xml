@@ -108,7 +108,7 @@
             </scope>
             <scope name="elm.import">
                 <starts-with>
-                    <expression>^(import|port\s+module|module)</expression>
+                    <expression>^(effect|import|module|port\s+module)</expression>
                     <capture number="0" name="elm.keyword" />
                 </starts-with>
                 <ends-with>
@@ -116,6 +116,7 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="syntax" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.import.function">
                         <expression>\b([a-z]\w*)</expression>
@@ -158,6 +159,7 @@
                     <string>port</string>
                     <string>then</string>
                     <string>type</string>
+                    <string>where</string>
                 </strings>
             </scope>
         </collection>
