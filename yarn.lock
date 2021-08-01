@@ -2035,10 +2035,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ts-pattern@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.2.2.tgz#8a1c0bf16d15c69096dc404e6be1e4b76b1ede28"
-  integrity sha512-ezgweMdIP6Me7vzR6fT0dwBkTDJn1d303nTk+Ej8TQ1wHSnOTATwJzWf4ObLUJawrH2tXjbNtgrGcS6RJLNDAA==
+ts-pattern@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.2.4.tgz#b89e57579ecf1ff58d21e70d7f50743266e52777"
+  integrity sha512-sDZfdG1f8P2y3d6H6HOYn1HMlpjYslyK0wch9VOgdpjiXJ40Pkd5oNjXzoN+8UblTzEK1SW72fJWk+h6vaoNIw==
 
 tsconfig-paths@^3.9.0:
   version "3.9.0"
