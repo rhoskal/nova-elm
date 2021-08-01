@@ -2001,10 +2001,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-ts-pattern@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.2.2.tgz#8a1c0bf16d15c69096dc404e6be1e4b76b1ede28"
-  integrity sha512-ezgweMdIP6Me7vzR6fT0dwBkTDJn1d303nTk+Ej8TQ1wHSnOTATwJzWf4ObLUJawrH2tXjbNtgrGcS6RJLNDAA==
+ts-pattern@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.2.3.tgz#7a3a73a4af1679bd8cb8b2a8b534aef471cae84e"
+  integrity sha512-+diLi6NLOb8eDvehZctLVMvQzLjBLVYHRIh8Wlb96n8r+85ctINHLG8mTDRQoxBZZAUipbeGloAGeGg/VgI4QQ==
 
 tsconfig-paths@^3.9.0:
   version "3.9.0"
