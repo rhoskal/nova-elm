@@ -23,7 +23,7 @@
     "watch": "watch 'yarn run build' src"
   },
   "dependencies": {
-    "fp-ts": "^2.10.5",
+    "fp-ts": "^2.11.1",
     "io-ts": "^2.2.16",
     "ts-pattern": "^3.2.4"
   },
