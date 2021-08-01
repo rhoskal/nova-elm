@@ -23,17 +23,17 @@
     "watch": "watch 'yarn run build' src"
   },
   "dependencies": {
-    "fp-ts": "^2.10.5",
+    "fp-ts": "^2.11.1",
     "io-ts": "^2.2.16",
     "ts-pattern": "^3.2.4"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^19.0.1",
+    "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@rollup/plugin-typescript": "^8.2.3",
+    "@rollup/plugin-typescript": "^8.2.5",
     "@types/nova-editor-node": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.5",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
