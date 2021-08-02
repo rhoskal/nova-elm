@@ -70,7 +70,7 @@ const safeFormat = (
     () => {
       return new Promise<void>((resolve, reject) => {
         const process = new Process("/usr/bin/env", {
-          args: [`${formatterPath}`, `${documentPath}`],
+          args: [`${formatterPath}`, "--yes", `${documentPath}`],
         });
 
         process.onDidExit((status) => (status === 0 ? resolve() : reject()));
@@ -321,8 +321,6 @@ export const activate = (): void => {
       () => console.log("Activated 🎉. Happy Elm-ing :)"),
     ),
   );
-
-  console.log(`${nova.localize("Activated")} 🎉`);
 };
 
 export const deactivate = (): void => {
