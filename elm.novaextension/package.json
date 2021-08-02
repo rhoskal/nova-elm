@@ -1,5 +1,7 @@
 {
   "name": "elm.novaextension",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "elm-format": "^0.8.5"
+  }
 }

@@ -14,20 +14,24 @@
     "node": ">=12.17.0"
   },
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin typescript",
-    "compile": "tsc",
-    "format": "prettier --write 'src/**/*.ts'",
-    "lint": "eslint 'src/**/*.ts'",
-    "lint:fix": "eslint 'src/**/*.ts' --fix",
+    "build": "make build",
+    "compile": "make compile",
+    "format": "make format",
+    "format:ts": "make format-ts",
+    "format:xml": "make format-xml",
+    "lint": "make lint",
+    "lint:fix": "make lint-fix",
     "prepare": "is-ci || husky install",
-    "watch": "watch 'yarn run build' src"
+    "watch": "make watch"
   },
   "dependencies": {
     "fp-ts": "^2.11.1",
     "io-ts": "^2.2.16",
+    "monocle-ts": "^2.3.10",
     "ts-pattern": "^3.2.4"
   },
   "devDependencies": {
+    "@prettier/plugin-xml": "^1.0.2",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-typescript": "^8.2.5",
@@ -42,6 +46,7 @@
     "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
     "rollup": "^2.55.1",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.3.5",
     "watch": "^1.0.2"
@@ -49,6 +54,9 @@
   "lint-staged": {
     "src/**/*.ts": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "elm.novaextension/**/*.xml": [
       "prettier --write"
     ]
   },
