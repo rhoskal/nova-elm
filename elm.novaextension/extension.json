@@ -15,5 +15,50 @@
   "activationEvents": ["onLanguage:elm", "onWorkspaceContains:elm.json"],
   "entitlements": {
     "process": true
+  },
+  "config": [
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "Elm Formatter Path",
+      "description": "The path (absolute) to your elm-format binary.",
+      "link": "https://github.com/avh4/elm-format",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on Save",
+      "description": "Format document when saved.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+  "configWorkspace": [
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "Elm Formatter Path",
+      "description": "The path (absolute) to your elm-format binary.",
+      "link": "https://github.com/avh4/elm-format",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on Save",
+      "description": "Format document when saved.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+  "commands": {
+    "editor": [
+      {
+        "title": "Format Document",
+        "command": "hansjhoffman.elm.commands.formatDocument",
+        "shortcut": "opt-shift-f",
+        "when": "editorHasFocus",
+        "filters": {
+          "syntaxes": ["elm"]
+        }
+      }
+    ]
   }
 }

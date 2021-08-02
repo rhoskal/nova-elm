@@ -13,6 +13,13 @@
   "engines": {
     "node": ">=12.17.0"
   },
+  "keywords": [
+    "elm",
+    "elm-lang",
+    "nova",
+    "nova editor",
+    "language server"
+  ],
   "scripts": {
     "build": "make build",
     "compile": "make compile",
