@@ -85,7 +85,7 @@ const safeFormat = (
   );
 };
 
-const safeStart = () => {
+const safeStart = (): TE.TaskEither<InstallDepsError, ReadonlyArray<void>> => {
   return TE.sequenceSeqArray<void, InstallDepsError>([
     TE.tryCatch<InstallDepsError, void>(
       () => {
