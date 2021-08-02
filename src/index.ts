@@ -47,7 +47,7 @@ interface InstallDepsError {
 
 const showNotification = (body: string): void => {
   if (nova.inDevMode()) {
-    const notification = new NotificationRequest("nix-nova-notification");
+    const notification = new NotificationRequest("elm-nova-notification");
 
     notification.title = nova.extension.name;
     notification.body = body;
