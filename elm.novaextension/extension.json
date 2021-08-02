@@ -13,6 +13,36 @@
   },
 
   "main": "main.dist.js",
-
-  "activationEvents": ["onLanguage:elm", "onWorkspaceContains:elm.json"]
+  "activationEvents": ["onLanguage:elm", "onWorkspaceContains:elm.json"],
+  "entitlements": {
+    "process": true
+  },
+  "commands": {
+    "editor": [
+      {
+        "title": "Format Elm",
+        "command": "elm.format",
+        "shortcut": "opt-shift-f",
+        "when": "editorHasFocus",
+        "filters": {
+          "syntaxes": ["elm"]
+        }
+      }
+    ]
+  },
+  "configWorkspace": [
+    {
+      "key": "hansjhoffman.elm.elmFormatPath",
+      "title": "elm-format Path",
+      "type": "path",
+      "default": "",
+      "description": "Path to this workspace's elm-format executable"
+    },
+    {
+      "key": "hansjhoffman.elm.formatOnSave",
+      "title": "Format on Save",
+      "type": "boolean",
+      "default": false
+    }
+  ]
 }
