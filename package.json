@@ -29,7 +29,7 @@
     "lint": "make lint",
     "lint:fix": "make lint-fix",
     "prepare": "is-ci || husky install",
-    "watch": "make watch"
+    "run": "make run"
   },
   "dependencies": {
     "fp-ts": "^2.11.1",

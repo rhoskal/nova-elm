@@ -61,19 +61,30 @@ const extensionDir: string = nova.inDevMode()
   : nova.extension.globalStoragePath;
 
 const safeFormat = (
-  editor: TextEditor,
+  unformattedText: string,
   formatterPath: string,
-): TE.TaskEither<InvokeFormatterError, void> => {
-  const documentPath = editor.document.path;
-
-  return TE.tryCatch<InvokeFormatterError, void>(
+): TE.TaskEither<InvokeFormatterError, string> => {
+  return TE.tryCatch<InvokeFormatterError, string>(
     () => {
-      return new Promise<void>((resolve, reject) => {
-        const process = new Process("/usr/bin/env", {
-          args: [`${formatterPath}`, "--yes", `${documentPath}`],
+      return new Promise<string>((resolve, reject) => {
+        const process = new Process(formatterPath, {
+          args: ["--stdin"],
+          stdio: ["pipe", "pipe", "ignore"],
         });
 
-        process.onDidExit((status) => (status === 0 ? resolve() : reject()));
+        let stdout: string = "";
+        process.onStdout((line: string) => (stdout += line));
+
+        process.onDidExit((status) => (status === 0 ? resolve(stdout) : reject()));
+
+        /* HH - 2 Aug 2021
+         * Until Nova [Stream](https://bit.ly/2VrtInY) types are improved, I'm forced to do this 😞
+         */
+        const writer = (process.stdin as any).getWriter();
+        writer.ready.then(() => {
+          writer.write(unformattedText);
+          writer.close();
+        });
 
         process.start();
       });
@@ -194,14 +205,28 @@ const formatDocument = (editor: TextEditor): void => {
     O.fold(
       () => console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`),
       (path) => {
-        safeFormat(editor, path)().then(
+        const documentRange: Range = new Range(0, editor.document.length);
+        const documentText: string = editor.document.getTextInRange(documentRange);
+
+        safeFormat(documentText, path)().then(
           E.fold(
             (err) => {
               return match(err)
                 .with({ _tag: "invokeFormatterError" }, ({ reason }) => console.error(reason))
                 .exhaustive();
             },
-            () => console.log(`${nova.localize("Formatted")} ${editor.document.path}`),
+            (formattedText: string) => {
+              editor
+                .edit((edit: TextEditorEdit) => {
+                  edit.replace(documentRange, formattedText);
+                })
+                .then(() => {
+                  console.log(`${nova.localize("Formatted")} ${editor.document.path}`);
+                })
+                .catch(() => {
+                  console.error(`${nova.localize("Failed to replace editor text in-memory")}`);
+                });
+            },
           ),
         );
       },
