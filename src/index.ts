@@ -199,13 +199,16 @@ const clearSaveListeners = (): void => {
   saveListeners = new Map();
 };
 
-const formatDocument = (editor: TextEditor) => {
+const formatDocument = (editor: TextEditor): Promise<void> => {
   return pipe(
     selectFormatterPath(configs),
     O.fold(
       () => {
-        console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`);
-        return Promise.resolve();
+        return new Promise((resolve, _reject) => {
+          console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`);
+
+          resolve();
+        });
       },
       (path) => {
         const documentRange: Range = new Range(0, editor.document.length);
