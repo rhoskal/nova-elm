@@ -36,7 +36,7 @@ targets:
 
 .PHONY: build
 build: ## Make a production build
-	yarn build
+	yarn rollup --config rollup.config.ts --configPlugin typescript
 
 .PHONY: clean
 clean: ## Remove build artifacts
@@ -51,16 +51,24 @@ deps: ## Install all dependencies
 	yarn install
 
 .PHONY: format
-format: format-js ## Format everything
+format: format-ts format-xml ## Format ts,xml files
 
-.PHONY: format-js
-format-js: ## Format js
+.PHONY: format-ts
+format-ts: ## Format typescript files
 	yarn prettier --write 'src/**/*.ts'
+	
+.PHONY: format-xml
+format-xml: ## Format xml files
+	yarn prettier --write 'elm.novaextension/**/*.xml'
 
 .PHONY: lint
 lint: ## Lint code
 	yarn eslint 'src/**/*.ts' --fix
 
+.PHONY: lint
+lint-fix: ## Lint code w/ fixes
+	yarn eslint 'src/**/*.ts' --fix
+	
 .PHONY: run
 run: ## Watch for code changes and recompile
-	yarn watch
+	yarn watch 'yarn build' src

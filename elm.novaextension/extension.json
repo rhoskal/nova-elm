@@ -5,23 +5,54 @@
   "organization": "@hansjhoffman",
   "description": "Elm syntax highlighting, code completions and Language Server support.",
   "version": "0.2.0",
-  "categories": ["languages"],
+  "categories": ["commands", "formatters", "languages"],
   "license": "MIT",
   "repository": "https://github.com/hansjhoffman/nova-elm",
   "bugs": {
     "url": "https://github.com/hansjhoffman/nova-elm/issues"
   },
-
-  "main": "main.dist.js",
+  "main": "main.cjs.min.js",
   "activationEvents": ["onLanguage:elm", "onWorkspaceContains:elm.json"],
   "entitlements": {
     "process": true
   },
+  "config": [
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "Elm Formatter Path",
+      "description": "The path (absolute) to your elm-format binary.",
+      "link": "https://github.com/avh4/elm-format",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on Save",
+      "description": "Format document when saved.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+  "configWorkspace": [
+    {
+      "key": "hansjhoffman.elm.config.elmFormatPath",
+      "title": "Elm Formatter Path",
+      "description": "The path (absolute) to your elm-format binary.",
+      "link": "https://github.com/avh4/elm-format",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.formatOnSave",
+      "title": "Format on Save",
+      "description": "Format document when saved.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
   "commands": {
     "editor": [
       {
-        "title": "Format Elm",
-        "command": "elm.format",
+        "title": "Format Document",
+        "command": "hansjhoffman.elm.commands.formatDocument",
         "shortcut": "opt-shift-f",
         "when": "editorHasFocus",
         "filters": {
@@ -29,20 +60,5 @@
         }
       }
     ]
-  },
-  "configWorkspace": [
-    {
-      "key": "hansjhoffman.elm.elmFormatPath",
-      "title": "elm-format Path",
-      "type": "path",
-      "default": "",
-      "description": "Path to this workspace's elm-format executable"
-    },
-    {
-      "key": "hansjhoffman.elm.formatOnSave",
-      "title": "Format on Save",
-      "type": "boolean",
-      "default": false
-    }
-  ]
+  }
 }
