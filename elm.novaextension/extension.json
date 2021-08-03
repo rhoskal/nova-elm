@@ -4,7 +4,7 @@
   "author": "Hans Hoffman",
   "organization": "@hansjhoffman",
   "description": "Elm syntax highlighting, code completions and Language Server support.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "categories": ["commands", "formatters", "languages"],
   "license": "MIT",
   "repository": "https://github.com/hansjhoffman/nova-elm",

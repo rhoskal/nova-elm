@@ -1,3 +1,14 @@
+## v0.3.0 - 2021-08-03
+
+### Chore & Maintenance
+
+- `[core]` Update extension and dev deps.
+
+### Features
+
+- `[formatter]` Listen for config changes to formatter. ([#22](https://github.com/hansjhoffman/nova-elm/pull/22))
+- `[formatter]` Add formatter command and format on save. ([#21](https://github.com/hansjhoffman/nova-elm/pull/21))
+
 ## v0.2.0 - 2021-07-18
 
 ### Features
