@@ -42,6 +42,55 @@ interface InstallDepsError {
   readonly reason: string;
 }
 
+interface StartError {
+  readonly _tag: "startError";
+  readonly reason: string;
+}
+
+interface ShutdownError {
+  readonly _tag: "shutdownError";
+  readonly reason: string;
+}
+
+interface ServerOptions {
+  readonly type: "stdio" | "socket" | "pipe";
+  readonly path: string;
+  readonly args?: Array<string>;
+  readonly env?: Record<string, string>;
+}
+
+type Behavior = "error" | "off" | "warning";
+
+interface ClientSettings {
+  readonly elmLS: Readonly<{
+    // The path to your `elm` binary.
+    elmPath: string;
+    // The path to your `elm-format` binary.
+    elmFormatPath: string;
+    // The path to your `elm-review` binary.
+    elmReviewPath: string;
+    // Set severity or disable linting diagnostics for `elm-review`.
+    elmReviewDiagnostics: Behavior;
+    // The path to your `elm-test` binary.
+    elmTestPath: string;
+    // Disable linting diagnostics from the language server.
+    disableElmLSDiagnostics: boolean;
+    // Traces the communication between Nova and the language server.
+    trace: Readonly<{
+      server: Behavior;
+    }>;
+    // Skip confirmation for the Install Package code action.
+    skipInstallPackageConfirmation: boolean;
+    // Only update compiler diagnostics on save, not on document change.
+    onlyUpdateDiagnosticsOnSave: boolean;
+  }>;
+}
+
+interface ClientOptions {
+  readonly initializationOptions?: ClientSettings;
+  readonly syntaxes: Array<string>;
+}
+
 /*
  * Helpers
  */
