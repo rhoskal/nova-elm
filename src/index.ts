@@ -1,6 +1,7 @@
 import * as E from "fp-ts/Either";
 import * as M from "fp-ts/Map";
 import * as O from "fp-ts/Option";
+import * as T from "fp-ts/Task";
 import * as TE from "fp-ts/TaskEither";
 import { constVoid, pipe } from "fp-ts/function";
 import * as Str from "fp-ts/string";
@@ -204,11 +205,14 @@ const formatDocument = (editor: TextEditor): Promise<void> => {
     selectFormatterPath(configs),
     O.fold(
       () => {
-        return new Promise((resolve, _reject) => {
-          console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`);
+        const emptyPromise: T.Task<void> = () =>
+          new Promise((resolve, _reject) => {
+            console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`);
 
-          resolve();
-        });
+            resolve();
+          });
+
+        return emptyPromise();
       },
       (path) => {
         const documentRange: Range = new Range(0, editor.document.length);
