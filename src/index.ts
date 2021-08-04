@@ -16,20 +16,32 @@ import { isFalse } from "./typeGuards";
  */
 
 enum ExtensionConfigKeys {
-  FormatterPath = "hansjhoffman.elm.config.elmFormatPath",
-  FormatOnSave = "hansjhoffman.elm.config.formatOnSave",
+  ElmPath = "hansjhoffman.elm.config.elmPath",
+  ElmFormatPath = "hansjhoffman.elm.config.elmFormatPath",
+  ElmReviewPath = "hansjhoffman.elm.config.elmReviewPath",
+  ElmTestPath = "hansjhoffman.elm.config.elmTestPath",
   FormatDocument = "hansjhoffman.elm.commands.formatDocument",
+  FormatOnSave = "hansjhoffman.elm.config.formatOnSave",
+  LSDisableDiagnostics = "hansjhoffman.elm.config.disableDiagnostics",
+  LSReviewDiagnostics = "hansjhoffman.elm.config.elmReviewDiagnostics",
+  LSTrace = "hansjhoffman.elm.config.elmTrace",
+  Reload = "hansjhoffman.elm.config.reload",
 }
 
-interface ExtensionSettings {
-  readonly workspace: Readonly<{
-    formatterPath: O.Option<string>;
-    formatOnSave: boolean;
-  }>;
-  readonly global: Readonly<{
-    formatterPath: O.Option<string>;
-    formatOnSave: boolean;
-  }>;
+interface Preferences {
+  elmPath: O.Option<string>;
+  elmFormatPath: O.Option<string>;
+  elmReviewPath: O.Option<string>;
+  elmTestPath: O.Option<string>;
+  formatOnSave: boolean;
+  lsDisableDiagnostics: boolean;
+  lsReviewDiagnostics: Behavior;
+  lsTrace: Behavior;
+}
+
+interface UserPreferences {
+  readonly workspace: Readonly<Preferences>;
+  readonly global: Readonly<Preferences>;
 }
 
 interface InvokeFormatterError {
@@ -110,6 +122,10 @@ const extensionDir: string = nova.inDevMode()
   ? nova.extension.path
   : nova.extension.globalStoragePath;
 
+const mkExtensionDepsPath = (binary: string): string => {
+  return nova.path.join(extensionDir, "node_modules", ".bin", binary);
+};
+
 const safeFormat = (
   unformattedText: string,
   formatterPath: string,
@@ -146,8 +162,8 @@ const safeFormat = (
   );
 };
 
-const safeStart = (): TE.TaskEither<InstallDepsError, ReadonlyArray<void>> => {
-  return TE.sequenceSeqArray<void, InstallDepsError>([
+const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray<void>> => {
+  return TE.sequenceSeqArray<void, InstallDepsError | StartError>([
     TE.tryCatch<InstallDepsError, void>(
       () => {
         return new Promise<void>((resolve, reject) => {
@@ -163,69 +179,332 @@ const safeStart = (): TE.TaskEither<InstallDepsError, ReadonlyArray<void>> => {
       },
       () => ({ _tag: "installDepsError", reason: "Failed to install extension deps." }),
     ),
+    TE.tryCatch<StartError, void>(
+      () => {
+        return new Promise<void>((resolve, _reject) => {
+          pipe(
+            languageClient,
+            O.map((oldClient) => {
+              oldClient.stop();
+              nova.subscriptions.remove(compositeDisposable);
+              languageClient = O.none;
+            }),
+          );
+
+          const serverOptions: ServerOptions = {
+            path: nova.path.join(nova.extension.path, "elm-ls", "out", "index.js"),
+            type: "stdio",
+          };
+
+          const clientOptions: ClientOptions = {
+            initializationOptions: {
+              elmLS: {
+                elmPath: pipe(
+                  selectElmPath(preferences),
+                  O.getOrElse(() => mkExtensionDepsPath("elm")),
+                ),
+                elmFormatPath: pipe(
+                  selectElmFormatPath(preferences),
+                  O.getOrElse(() => mkExtensionDepsPath("elm-format")),
+                ),
+                elmReviewPath: pipe(
+                  selectElmReviewPath(preferences),
+                  O.getOrElse(() => mkExtensionDepsPath("elm-review")),
+                ),
+                elmReviewDiagnostics: selectLSReviewDiagnostics(preferences),
+                elmTestPath: pipe(
+                  selectElmTestPath(preferences),
+                  O.getOrElse(() => mkExtensionDepsPath("elm-test")),
+                ),
+                disableElmLSDiagnostics: selectLSDisableDiagnostics(preferences),
+                trace: {
+                  server: selectLSTrace(preferences),
+                },
+                skipInstallPackageConfirmation: false,
+                onlyUpdateDiagnosticsOnSave: false,
+              },
+            },
+            syntaxes: ["elm"],
+          };
+
+          const client = new LanguageClient(
+            "elmLS",
+            nova.extension.name,
+            serverOptions,
+            clientOptions,
+          );
+
+          compositeDisposable.add(
+            client.onDidStop((err) => {
+              let message = nova.localize("Elm Language Server stopped unexpectedly");
+              if (err) {
+                message += `:\n\n${err.toString()}`;
+              } else {
+                message += ".";
+              }
+              message += `\n\n${nova.localize(
+                "Please report this, along with any output in the Extension Console.",
+              )}`;
+
+              nova.workspace.showActionPanel(
+                message,
+                { buttons: [nova.localize("Restart"), nova.localize("Ignore")] },
+                (idx) => {
+                  if (idx == 0) {
+                    nova.commands.invoke(ExtensionConfigKeys.Reload);
+                  }
+                },
+              );
+            }),
+          );
+
+          nova.subscriptions.add(compositeDisposable);
+          client.start();
+          languageClient = O.some(client);
+
+          resolve();
+        });
+      },
+      () => ({ _tag: "startError", reason: "Failed to start language server." }),
+    ),
   ]);
+};
+
+const safeShutdown = (): TE.TaskEither<ShutdownError, void> => {
+  return TE.tryCatch<ShutdownError, void>(
+    () => {
+      return new Promise<void>((resolve, _reject) => {
+        pipe(
+          languageClient,
+          O.map((client) => {
+            client.stop();
+            nova.subscriptions.remove(compositeDisposable);
+            compositeDisposable.dispose();
+            languageClient = O.none;
+          }),
+        );
+
+        resolve();
+      });
+    },
+    () => ({ _tag: "shutdownError", reason: "Uh oh... Failed to deactivate plugin." }),
+  );
 };
 
 /*
  * Main
  */
 
-let configs: ExtensionSettings = {
+let preferences: UserPreferences = {
   workspace: {
+    elmPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    elmFormatPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmFormatPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    elmReviewPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmReviewPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    elmTestPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmTestPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
     formatOnSave: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.FormatOnSave)),
-      O.chain((value) => O.fromEither(D.boolean.decode(value))),
+      O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
       O.getOrElseW(() => false),
     ),
-    formatterPath: pipe(
-      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.FormatterPath)),
-      O.chain((path) => O.fromEither(D.string.decode(path))),
-      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    lsDisableDiagnostics: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
+      O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
+      O.getOrElseW(() => false),
     ),
+    lsReviewDiagnostics: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSReviewDiagnostics)),
+      O.chain((value: unknown) =>
+        O.fromEither(
+          D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
+        ),
+      ),
+      O.getOrElseW(() => "off"),
+    ) as Behavior,
+    lsTrace: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSTrace)),
+      O.chain((value: unknown) =>
+        O.fromEither(
+          D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
+        ),
+      ),
+      O.getOrElseW(() => "off"),
+    ) as Behavior,
   },
   global: {
-    formatOnSave: pipe(
-      O.fromNullable(nova.config.get(ExtensionConfigKeys.FormatOnSave)),
-      O.chain((value) => O.fromEither(D.boolean.decode(value))),
-      O.getOrElseW(() => false),
-    ),
-    formatterPath: pipe(
-      O.fromNullable(nova.config.get(ExtensionConfigKeys.FormatterPath)),
-      O.chain((path) => O.fromEither(D.string.decode(path))),
+    elmPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
       O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
     ),
+    elmFormatPath: pipe(
+      O.fromNullable(nova.config.get(ExtensionConfigKeys.ElmFormatPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    elmReviewPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmReviewPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    elmTestPath: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.ElmTestPath)),
+      O.chain((path: unknown) => O.fromEither(D.string.decode(path))),
+      O.chain(O.fromPredicate((path) => isFalse(Str.isEmpty(path)))),
+    ),
+    formatOnSave: pipe(
+      O.fromNullable(nova.config.get(ExtensionConfigKeys.FormatOnSave)),
+      O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
+      O.getOrElseW(() => false),
+    ),
+    lsDisableDiagnostics: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
+      O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
+      O.getOrElseW(() => false),
+    ),
+    lsReviewDiagnostics: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSReviewDiagnostics)),
+      O.chain((value: unknown) =>
+        O.fromEither(
+          D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
+        ),
+      ),
+      O.getOrElseW(() => "off"),
+    ) as Behavior,
+    lsTrace: pipe(
+      O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSTrace)),
+      O.chain((value: unknown) =>
+        O.fromEither(
+          D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
+        ),
+      ),
+      O.getOrElseW(() => "off"),
+    ) as Behavior,
   },
 };
 
-const workspaceConfigsLens = Lens.fromPath<ExtensionSettings>()(["workspace"]);
-const globalConfigsLens = Lens.fromPath<ExtensionSettings>()(["global"]);
+const workspaceConfigsLens = Lens.fromPath<UserPreferences>()(["workspace"]);
+const globalConfigsLens = Lens.fromPath<UserPreferences>()(["global"]);
 
 const compositeDisposable: CompositeDisposable = new CompositeDisposable();
 let saveListeners: Map<string, Disposable> = new Map();
+let languageClient: O.Option<LanguageClient> = O.none;
 
 /**
  * Gets a value giving precedence to workspace over global extension values.
- * @param {ExtensionSettings} configs - extension settings
+ * @param {UserPreferences} preferences - user preferences
  */
-const selectFormatOnSave = (configs: ExtensionSettings): boolean => {
-  const workspace = workspaceConfigsLens.get(configs);
-  const global = globalConfigsLens.get(configs);
+const selectFormatOnSave = (preferences: UserPreferences): boolean => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
 
   return workspace.formatOnSave || global.formatOnSave;
 };
 
 /**
  * Gets a value giving precedence to workspace over global extension values.
- * @param {ExtensionSettings} configs - extension settings
+ * @param {UserPreferences} preferences - user preferences
  */
-const selectFormatterPath = (configs: ExtensionSettings): O.Option<string> => {
-  const workspace = workspaceConfigsLens.get(configs);
-  const global = globalConfigsLens.get(configs);
+const selectElmPath = (preferences: UserPreferences): O.Option<string> => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
 
   return pipe(
-    workspace.formatterPath,
-    O.alt(() => global.formatterPath),
+    workspace.elmPath,
+    O.alt(() => global.elmPath),
   );
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectElmFormatPath = (preferences: UserPreferences): O.Option<string> => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  return pipe(
+    workspace.elmFormatPath,
+    O.alt(() => global.elmFormatPath),
+  );
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectElmReviewPath = (preferences: UserPreferences): O.Option<string> => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  return pipe(
+    workspace.elmReviewPath,
+    O.alt(() => global.elmReviewPath),
+  );
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectElmTestPath = (preferences: UserPreferences): O.Option<string> => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  return pipe(
+    workspace.elmTestPath,
+    O.alt(() => global.elmTestPath),
+  );
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectLSDisableDiagnostics = (preferences: UserPreferences): boolean => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  return workspace.lsDisableDiagnostics || global.lsDisableDiagnostics;
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectLSReviewDiagnostics = (preferences: UserPreferences): Behavior => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  // return workspace.lsReviewDiagnostics || global.lsReviewDiagnostics;
+  return "off";
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectLSTrace = (preferences: UserPreferences): Behavior => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  // return workspace.lsTrace || global.lsTrace;
+  return "off";
 };
 
 const addSaveListener = (editor: TextEditor): void => {
@@ -251,7 +530,7 @@ const clearSaveListeners = (): void => {
 
 const formatDocument = (editor: TextEditor): Promise<void> => {
   return pipe(
-    selectFormatterPath(configs),
+    selectElmFormatPath(preferences),
     O.fold(
       () => {
         const emptyPromise: T.Task<void> = () =>
@@ -299,7 +578,7 @@ export const activate = (): void => {
 
   compositeDisposable.add(
     nova.workspace.onDidAddTextEditor((editor: TextEditor): void => {
-      const shouldFormatOnSave = selectFormatOnSave(configs);
+      const shouldFormatOnSave = selectFormatOnSave(preferences);
 
       if (shouldFormatOnSave) {
         addSaveListener(editor);
@@ -313,14 +592,14 @@ export const activate = (): void => {
 
   compositeDisposable.add(
     nova.workspace.config.onDidChange<unknown>(
-      ExtensionConfigKeys.FormatterPath,
+      ExtensionConfigKeys.ElmFormatPath,
       (newValue, _oldValue): void => {
-        configs = workspaceConfigsLens.modify((prevWorkspace) => ({
+        preferences = workspaceConfigsLens.modify((prevWorkspace) => ({
           ...prevWorkspace,
           formatterPath: O.fromEither(D.string.decode(newValue)),
-        }))(configs);
+        }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(configs);
+        const shouldFormatOnSave = selectFormatOnSave(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -334,15 +613,15 @@ export const activate = (): void => {
     nova.workspace.config.onDidChange<unknown>(
       ExtensionConfigKeys.FormatOnSave,
       (newValue, _oldValue): void => {
-        configs = workspaceConfigsLens.modify((prevWorkspace) => ({
+        preferences = workspaceConfigsLens.modify((prevWorkspace) => ({
           ...prevWorkspace,
           formatOnSave: pipe(
             D.boolean.decode(newValue),
             E.getOrElseW(() => false),
           ),
-        }))(configs);
+        }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(configs);
+        const shouldFormatOnSave = selectFormatOnSave(preferences);
 
         clearSaveListeners();
 
@@ -355,14 +634,14 @@ export const activate = (): void => {
 
   compositeDisposable.add(
     nova.config.onDidChange<unknown>(
-      ExtensionConfigKeys.FormatterPath,
+      ExtensionConfigKeys.ElmFormatPath,
       (newValue, _oldValue): void => {
-        configs = globalConfigsLens.modify((prevGlobal) => ({
+        preferences = globalConfigsLens.modify((prevGlobal) => ({
           ...prevGlobal,
           formatterPath: O.fromEither(D.string.decode(newValue)),
-        }))(configs);
+        }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(configs);
+        const shouldFormatOnSave = selectFormatOnSave(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -376,15 +655,15 @@ export const activate = (): void => {
     nova.config.onDidChange<unknown>(
       ExtensionConfigKeys.FormatOnSave,
       (newValue, _oldValue): void => {
-        configs = globalConfigsLens.modify((prevGlobal) => ({
+        preferences = globalConfigsLens.modify((prevGlobal) => ({
           ...prevGlobal,
           formatOnSave: pipe(
             D.boolean.decode(newValue),
             E.getOrElseW(() => false),
           ),
-        }))(configs);
+        }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(configs);
+        const shouldFormatOnSave = selectFormatOnSave(preferences);
 
         clearSaveListeners();
 
@@ -395,11 +674,15 @@ export const activate = (): void => {
     ),
   );
 
+  if (isFalse(nova.workspace.contains(nova.path.join(nova.workspace.path ?? "", "elm.json"))))
+    return;
+
   safeStart()().then(
     E.fold(
       (err) => {
         match(err)
           .with({ _tag: "installDepsError" }, ({ reason }) => console.error(reason))
+          .with({ _tag: "startError" }, ({ reason }) => console.error(reason))
           .exhaustive();
       },
       () => console.log("Activated 🎉. Happy Elm-ing :)"),
@@ -409,6 +692,25 @@ export const activate = (): void => {
 
 export const deactivate = (): void => {
   console.log(`${nova.localize("Deactivating")}...`);
+
+  pipe(
+    languageClient,
+    O.fold(constVoid, (client) => {
+      client.stop();
+      languageClient = O.none;
+    }),
+  );
+
+  safeShutdown()().then(
+    E.fold(
+      (err) => {
+        match(err)
+          .with({ _tag: "shutdownError" }, ({ reason }) => console.error(reason))
+          .exhaustive();
+      },
+      () => console.log("Deactivated. Come back soon :)"),
+    ),
+  );
 
   clearSaveListeners();
   compositeDisposable.dispose();
