@@ -1,7 +1,6 @@
 import * as E from "fp-ts/Either";
 import * as M from "fp-ts/Map";
 import * as O from "fp-ts/Option";
-import * as T from "fp-ts/Task";
 import * as TE from "fp-ts/TaskEither";
 import { constVoid, pipe } from "fp-ts/function";
 import * as Str from "fp-ts/string";
@@ -34,9 +33,9 @@ interface Preferences {
   elmReviewPath: O.Option<string>;
   elmTestPath: O.Option<string>;
   formatOnSave: O.Option<boolean>;
-  lsDisableDiagnostics: boolean;
-  lsReviewDiagnostics: Behavior;
-  lsTrace: Behavior;
+  lsDisableDiagnostics: O.Option<boolean>;
+  lsReviewDiagnostics: O.Option<Behavior>;
+  lsTrace: O.Option<Behavior>;
 }
 
 interface UserPreferences {
@@ -321,7 +320,6 @@ let preferences: UserPreferences = {
     lsDisableDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
       O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
-      O.getOrElseW(() => false),
     ),
     lsReviewDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSReviewDiagnostics)),
@@ -330,8 +328,7 @@ let preferences: UserPreferences = {
           D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
         ),
       ),
-      O.getOrElseW(() => "off"),
-    ) as Behavior,
+    ),
     lsTrace: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSTrace)),
       O.chain((value: unknown) =>
@@ -339,8 +336,7 @@ let preferences: UserPreferences = {
           D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
         ),
       ),
-      O.getOrElseW(() => "off"),
-    ) as Behavior,
+    ),
   },
   global: {
     elmPath: pipe(
@@ -370,7 +366,6 @@ let preferences: UserPreferences = {
     lsDisableDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
       O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
-      O.getOrElseW(() => false),
     ),
     lsReviewDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSReviewDiagnostics)),
@@ -379,8 +374,7 @@ let preferences: UserPreferences = {
           D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
         ),
       ),
-      O.getOrElseW(() => "off"),
-    ) as Behavior,
+    ),
     lsTrace: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSTrace)),
       O.chain((value: unknown) =>
@@ -388,8 +382,7 @@ let preferences: UserPreferences = {
           D.union(D.literal("error"), D.literal("off"), D.literal("warning")).decode(value),
         ),
       ),
-      O.getOrElseW(() => "off"),
-    ) as Behavior,
+    ),
   },
 };
 
@@ -476,7 +469,7 @@ const selectLSDisableDiagnostics = (preferences: UserPreferences): boolean => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
-  return workspace.lsDisableDiagnostics || global.lsDisableDiagnostics;
+  return O.isSome(workspace.lsDisableDiagnostics) || O.isSome(global.lsDisableDiagnostics);
 };
 
 /**
