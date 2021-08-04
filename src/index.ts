@@ -198,14 +198,14 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
           const clientOptions: ClientOptions = {
             initializationOptions: {
               elmLS: {
-                elmPath: selectElmPath(preferences),
-                elmFormatPath: selectElmFormatPath(preferences),
-                elmReviewPath: selectElmReviewPath(preferences),
-                elmReviewDiagnostics: selectLSReviewDiagnostics(preferences),
-                elmTestPath: selectElmTestPath(preferences),
-                disableElmLSDiagnostics: selectLSDisableDiagnostics(preferences),
+                elmPath: selectElmPathWithDefault(preferences),
+                elmFormatPath: selectElmFormatPathWithDefault(preferences),
+                elmReviewPath: selectElmReviewPathWithDefault(preferences),
+                elmReviewDiagnostics: selectLSReviewDiagnosticsWithDefault(preferences),
+                elmTestPath: selectElmTestPathWithDefault(preferences),
+                disableElmLSDiagnostics: selectLSDisableDiagnosticsWithDefault(preferences),
                 trace: {
-                  server: selectLSTrace(preferences),
+                  server: selectLSTraceWithDefault(preferences),
                 },
                 skipInstallPackageConfirmation: false,
                 onlyUpdateDiagnosticsOnSave: false,
@@ -399,7 +399,7 @@ const selectFormatOnSave = (preferences: UserPreferences): boolean => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmPath = (preferences: UserPreferences): string => {
+const selectElmPathWithDefault = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -414,7 +414,7 @@ const selectElmPath = (preferences: UserPreferences): string => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmFormatPath = (preferences: UserPreferences): string => {
+const selectElmFormatPathWithDefault = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -429,7 +429,7 @@ const selectElmFormatPath = (preferences: UserPreferences): string => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmReviewPath = (preferences: UserPreferences): string => {
+const selectElmReviewPathWithDefault = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -444,7 +444,7 @@ const selectElmReviewPath = (preferences: UserPreferences): string => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmTestPath = (preferences: UserPreferences): string => {
+const selectElmTestPathWithDefault = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -459,7 +459,7 @@ const selectElmTestPath = (preferences: UserPreferences): string => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectLSDisableDiagnostics = (preferences: UserPreferences): boolean => {
+const selectLSDisableDiagnosticsWithDefault = (preferences: UserPreferences): boolean => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -470,7 +470,7 @@ const selectLSDisableDiagnostics = (preferences: UserPreferences): boolean => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectLSReviewDiagnostics = (preferences: UserPreferences): Behavior => {
+const selectLSReviewDiagnosticsWithDefault = (preferences: UserPreferences): Behavior => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -482,7 +482,7 @@ const selectLSReviewDiagnostics = (preferences: UserPreferences): Behavior => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectLSTrace = (preferences: UserPreferences): Behavior => {
+const selectLSTraceWithDefault = (preferences: UserPreferences): Behavior => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
@@ -512,7 +512,7 @@ const clearSaveListeners = (): void => {
 };
 
 const formatDocument = (editor: TextEditor): Promise<void> => {
-  const formatterPath = selectElmFormatPath(preferences);
+  const formatterPath = selectElmFormatPathWithDefault(preferences);
 
   const documentRange: Range = new Range(0, editor.document.length);
   const documentText: string = editor.document.getTextInRange(documentRange);
