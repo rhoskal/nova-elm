@@ -28,14 +28,14 @@ enum ExtensionConfigKeys {
 }
 
 interface Preferences {
-  elmPath: O.Option<string>;
-  elmFormatPath: O.Option<string>;
-  elmReviewPath: O.Option<string>;
-  elmTestPath: O.Option<string>;
-  formatOnSave: O.Option<boolean>;
-  lsDisableDiagnostics: O.Option<boolean>;
-  lsReviewDiagnostics: O.Option<Behavior>;
-  lsTrace: O.Option<Behavior>;
+  readonly elmPath: O.Option<string>;
+  readonly elmFormatPath: O.Option<string>;
+  readonly elmReviewPath: O.Option<string>;
+  readonly elmTestPath: O.Option<string>;
+  readonly formatOnSave: O.Option<boolean>;
+  readonly lsDisableDiagnostics: O.Option<boolean>;
+  readonly lsReviewDiagnostics: O.Option<Behavior>;
+  readonly lsTrace: O.Option<Behavior>;
 }
 
 interface UserPreferences {
@@ -185,7 +185,7 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
             languageClient,
             O.map((oldClient) => {
               oldClient.stop();
-              nova.subscriptions.remove(compositeDisposable);
+              nova.subscriptions.remove(extensionDisposable);
               languageClient = O.none;
             }),
           );
@@ -221,7 +221,7 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
             clientOptions,
           );
 
-          compositeDisposable.add(
+          extensionDisposable.add(
             client.onDidStop((err) => {
               let message = nova.localize("Elm Language Server stopped unexpectedly");
               if (err) {
@@ -245,8 +245,8 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
             }),
           );
 
-          nova.subscriptions.add(compositeDisposable);
           client.start();
+          nova.subscriptions.add(extensionDisposable);
           languageClient = O.some(client);
 
           resolve();
@@ -265,8 +265,8 @@ const safeShutdown = (): TE.TaskEither<ShutdownError, void> => {
           languageClient,
           O.map((client) => {
             client.stop();
-            nova.subscriptions.remove(compositeDisposable);
-            compositeDisposable.dispose();
+            nova.subscriptions.remove(extensionDisposable);
+            extensionDisposable.dispose();
             languageClient = O.none;
           }),
         );
@@ -380,7 +380,7 @@ let preferences: UserPreferences = {
 const workspaceConfigsLens = Lens.fromPath<UserPreferences>()(["workspace"]);
 const globalConfigsLens = Lens.fromPath<UserPreferences>()(["global"]);
 
-const compositeDisposable: CompositeDisposable = new CompositeDisposable();
+const extensionDisposable: CompositeDisposable = new CompositeDisposable();
 let saveListeners: Map<string, Disposable> = new Map();
 let languageClient: O.Option<LanguageClient> = O.none;
 
@@ -550,7 +550,7 @@ export const activate = (): void => {
   console.log(`${nova.localize("Activating")}...`);
   showNotification(`${nova.localize("Starting extension")}...`);
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.workspace.onDidAddTextEditor((editor: TextEditor): void => {
       const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
@@ -560,11 +560,11 @@ export const activate = (): void => {
     }),
   );
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.commands.register(ExtensionConfigKeys.FormatDocument, formatDocument),
   );
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.workspace.config.onDidChange<unknown>(
       ExtensionConfigKeys.ElmFormatPath,
       (newValue, _oldValue): void => {
@@ -583,7 +583,7 @@ export const activate = (): void => {
     ),
   );
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.workspace.config.onDidChange<unknown>(
       ExtensionConfigKeys.FormatOnSave,
       (newValue, _oldValue): void => {
@@ -603,7 +603,7 @@ export const activate = (): void => {
     ),
   );
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.config.onDidChange<unknown>(
       ExtensionConfigKeys.ElmFormatPath,
       (newValue, _oldValue): void => {
@@ -622,7 +622,7 @@ export const activate = (): void => {
     ),
   );
 
-  compositeDisposable.add(
+  extensionDisposable.add(
     nova.config.onDidChange<unknown>(
       ExtensionConfigKeys.FormatOnSave,
       (newValue, _oldValue): void => {
@@ -681,5 +681,5 @@ export const deactivate = (): void => {
   );
 
   clearSaveListeners();
-  compositeDisposable.dispose();
+  extensionDisposable.dispose();
 };
