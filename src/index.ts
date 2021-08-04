@@ -191,7 +191,7 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
           );
 
           const serverOptions: ServerOptions = {
-            path: nova.path.join(nova.extension.path, "elm-ls", "out", "index.js"),
+            path: mkExtensionDepsPath("elm-language-server"),
             type: "stdio",
           };
 
@@ -245,8 +245,8 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
             }),
           );
 
-          client.start();
           nova.subscriptions.add(extensionDisposable);
+          client.start();
           languageClient = O.some(client);
 
           resolve();
