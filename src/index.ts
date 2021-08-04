@@ -33,7 +33,7 @@ interface Preferences {
   elmFormatPath: O.Option<string>;
   elmReviewPath: O.Option<string>;
   elmTestPath: O.Option<string>;
-  formatOnSave: boolean;
+  formatOnSave: O.Option<boolean>;
   lsDisableDiagnostics: boolean;
   lsReviewDiagnostics: Behavior;
   lsTrace: Behavior;
@@ -317,7 +317,6 @@ let preferences: UserPreferences = {
     formatOnSave: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.FormatOnSave)),
       O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
-      O.getOrElseW(() => false),
     ),
     lsDisableDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
@@ -367,7 +366,6 @@ let preferences: UserPreferences = {
     formatOnSave: pipe(
       O.fromNullable(nova.config.get(ExtensionConfigKeys.FormatOnSave)),
       O.chain((value: unknown) => O.fromEither(D.boolean.decode(value))),
-      O.getOrElseW(() => false),
     ),
     lsDisableDiagnostics: pipe(
       O.fromNullable(nova.workspace.config.get(ExtensionConfigKeys.LSDisableDiagnostics)),
@@ -410,7 +408,7 @@ const selectFormatOnSave = (preferences: UserPreferences): boolean => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
-  return workspace.formatOnSave || global.formatOnSave;
+  return O.isSome(workspace.formatOnSave) || O.isSome(global.formatOnSave);
 };
 
 /**
@@ -598,10 +596,7 @@ export const activate = (): void => {
       (newValue, _oldValue): void => {
         preferences = workspaceConfigsLens.modify((prevWorkspace) => ({
           ...prevWorkspace,
-          formatOnSave: pipe(
-            D.boolean.decode(newValue),
-            E.getOrElseW(() => false),
-          ),
+          formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
         const shouldFormatOnSave = selectFormatOnSave(preferences);
@@ -640,10 +635,7 @@ export const activate = (): void => {
       (newValue, _oldValue): void => {
         preferences = globalConfigsLens.modify((prevGlobal) => ({
           ...prevGlobal,
-          formatOnSave: pipe(
-            D.boolean.decode(newValue),
-            E.getOrElseW(() => false),
-          ),
+          formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
         const shouldFormatOnSave = selectFormatOnSave(preferences);
