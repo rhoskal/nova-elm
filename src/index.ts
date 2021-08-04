@@ -198,20 +198,11 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
           const clientOptions: ClientOptions = {
             initializationOptions: {
               elmLS: {
-                elmPath: pipe(
-                  selectElmPath(preferences),
-                  O.getOrElse(() => mkExtensionDepsPath("elm")),
-                ),
+                elmPath: selectElmPath(preferences),
                 elmFormatPath: selectElmFormatPath(preferences),
-                elmReviewPath: pipe(
-                  selectElmReviewPath(preferences),
-                  O.getOrElse(() => mkExtensionDepsPath("elm-review")),
-                ),
+                elmReviewPath: selectElmReviewPath(preferences),
                 elmReviewDiagnostics: selectLSReviewDiagnostics(preferences),
-                elmTestPath: pipe(
-                  selectElmTestPath(preferences),
-                  O.getOrElse(() => mkExtensionDepsPath("elm-test")),
-                ),
+                elmTestPath: selectElmTestPath(preferences),
                 disableElmLSDiagnostics: selectLSDisableDiagnostics(preferences),
                 trace: {
                   server: selectLSTrace(preferences),
@@ -408,13 +399,14 @@ const selectFormatOnSave = (preferences: UserPreferences): boolean => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmPath = (preferences: UserPreferences): O.Option<string> => {
+const selectElmPath = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
   return pipe(
     workspace.elmPath,
     O.alt(() => global.elmPath),
+    O.getOrElse(() => mkExtensionDepsPath("elm")),
   );
 };
 
@@ -437,13 +429,14 @@ const selectElmFormatPath = (preferences: UserPreferences): string => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmReviewPath = (preferences: UserPreferences): O.Option<string> => {
+const selectElmReviewPath = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
   return pipe(
     workspace.elmReviewPath,
     O.alt(() => global.elmReviewPath),
+    O.getOrElse(() => mkExtensionDepsPath("elm-review")),
   );
 };
 
@@ -451,13 +444,14 @@ const selectElmReviewPath = (preferences: UserPreferences): O.Option<string> => 
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmTestPath = (preferences: UserPreferences): O.Option<string> => {
+const selectElmTestPath = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
   return pipe(
     workspace.elmTestPath,
     O.alt(() => global.elmTestPath),
+    O.getOrElse(() => mkExtensionDepsPath("elm-test")),
   );
 };
 
