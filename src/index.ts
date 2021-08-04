@@ -203,10 +203,7 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
                   selectElmPath(preferences),
                   O.getOrElse(() => mkExtensionDepsPath("elm")),
                 ),
-                elmFormatPath: pipe(
-                  selectElmFormatPath(preferences),
-                  O.getOrElse(() => mkExtensionDepsPath("elm-format")),
-                ),
+                elmFormatPath: selectElmFormatPath(preferences),
                 elmReviewPath: pipe(
                   selectElmReviewPath(preferences),
                   O.getOrElse(() => mkExtensionDepsPath("elm-review")),
@@ -434,13 +431,14 @@ const selectElmPath = (preferences: UserPreferences): O.Option<string> => {
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectElmFormatPath = (preferences: UserPreferences): O.Option<string> => {
+const selectElmFormatPath = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
   return pipe(
     workspace.elmFormatPath,
     O.alt(() => global.elmFormatPath),
+    O.getOrElse(() => mkExtensionDepsPath("elm-format")),
   );
 };
 
@@ -529,44 +527,29 @@ const clearSaveListeners = (): void => {
 };
 
 const formatDocument = (editor: TextEditor): Promise<void> => {
-  return pipe(
-    selectElmFormatPath(preferences),
-    O.fold(
-      () => {
-        const emptyPromise: T.Task<void> = () =>
-          new Promise((resolve, _reject) => {
-            console.log(`${nova.localize("Skipping")}... ${nova.localize("No formatter set")}.`);
+  const formatterPath = selectElmFormatPath(preferences);
 
-            resolve();
-          });
+  const documentRange: Range = new Range(0, editor.document.length);
+  const documentText: string = editor.document.getTextInRange(documentRange);
 
-        return emptyPromise();
+  return safeFormat(documentText, formatterPath)().then(
+    E.fold(
+      (err) => {
+        return match(err)
+          .with({ _tag: "invokeFormatterError" }, ({ reason }) => console.error(reason))
+          .exhaustive();
       },
-      (path) => {
-        const documentRange: Range = new Range(0, editor.document.length);
-        const documentText: string = editor.document.getTextInRange(documentRange);
-
-        return safeFormat(documentText, path)().then(
-          E.fold(
-            (err) => {
-              return match(err)
-                .with({ _tag: "invokeFormatterError" }, ({ reason }) => console.error(reason))
-                .exhaustive();
-            },
-            (formattedText: string) => {
-              editor
-                .edit((edit: TextEditorEdit) => {
-                  edit.replace(documentRange, formattedText);
-                })
-                .then(() => {
-                  console.log(`${nova.localize("Formatted")} ${editor.document.path}`);
-                })
-                .catch(() => {
-                  console.error(`${nova.localize("Failed to replace editor text in-memory")}`);
-                });
-            },
-          ),
-        );
+      (formattedText: string) => {
+        editor
+          .edit((edit: TextEditorEdit) => {
+            edit.replace(documentRange, formattedText);
+          })
+          .then(() => {
+            console.log(`${nova.localize("Formatted")} ${editor.document.path}`);
+          })
+          .catch(() => {
+            console.error(`${nova.localize("Failed to replace editor text in-memory")}`);
+          });
       },
     ),
   );
