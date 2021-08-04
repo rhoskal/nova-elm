@@ -474,8 +474,11 @@ const selectLSReviewDiagnosticsWithDefault = (preferences: UserPreferences): Beh
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
-  // return workspace.lsReviewDiagnostics || global.lsReviewDiagnostics;
-  return "off";
+  return pipe(
+    workspace.lsReviewDiagnostics,
+    O.alt(() => global.lsReviewDiagnostics),
+    O.getOrElseW(() => "off"),
+  ) as Behavior;
 };
 
 /**
@@ -486,8 +489,11 @@ const selectLSTraceWithDefault = (preferences: UserPreferences): Behavior => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
 
-  // return workspace.lsTrace || global.lsTrace;
-  return "off";
+  return pipe(
+    workspace.lsTrace,
+    O.alt(() => global.lsTrace),
+    O.getOrElseW(() => "off"),
+  ) as Behavior;
 };
 
 const addSaveListener = (editor: TextEditor): void => {
