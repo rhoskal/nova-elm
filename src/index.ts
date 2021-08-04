@@ -388,17 +388,6 @@ let languageClient: O.Option<LanguageClient> = O.none;
  * Gets a value giving precedence to workspace over global extension values.
  * @param {UserPreferences} preferences - user preferences
  */
-const selectFormatOnSave = (preferences: UserPreferences): boolean => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return O.isSome(workspace.formatOnSave) || O.isSome(global.formatOnSave);
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
 const selectElmPathWithDefault = (preferences: UserPreferences): string => {
   const workspace = workspaceConfigsLens.get(preferences);
   const global = globalConfigsLens.get(preferences);
@@ -453,6 +442,17 @@ const selectElmTestPathWithDefault = (preferences: UserPreferences): string => {
     O.alt(() => global.elmTestPath),
     O.getOrElse(() => mkExtensionDepsPath("elm-test")),
   );
+};
+
+/**
+ * Gets a value giving precedence to workspace over global extension values.
+ * @param {UserPreferences} preferences - user preferences
+ */
+const selectFormatOnSaveWithDefault = (preferences: UserPreferences): boolean => {
+  const workspace = workspaceConfigsLens.get(preferences);
+  const global = globalConfigsLens.get(preferences);
+
+  return O.isSome(workspace.formatOnSave) || O.isSome(global.formatOnSave);
 };
 
 /**
@@ -552,7 +552,7 @@ export const activate = (): void => {
 
   compositeDisposable.add(
     nova.workspace.onDidAddTextEditor((editor: TextEditor): void => {
-      const shouldFormatOnSave = selectFormatOnSave(preferences);
+      const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
       if (shouldFormatOnSave) {
         addSaveListener(editor);
@@ -573,7 +573,7 @@ export const activate = (): void => {
           formatterPath: O.fromEither(D.string.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(preferences);
+        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -592,7 +592,7 @@ export const activate = (): void => {
           formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(preferences);
+        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
         clearSaveListeners();
 
@@ -612,7 +612,7 @@ export const activate = (): void => {
           formatterPath: O.fromEither(D.string.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(preferences);
+        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -631,7 +631,7 @@ export const activate = (): void => {
           formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSave(preferences);
+        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
 
         clearSaveListeners();
 
