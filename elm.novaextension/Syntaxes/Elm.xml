@@ -107,7 +107,7 @@
                 <capture number="2" name="elm.value.number.integer" />
                 <capture number="3" name="elm.operator" />
                 <capture number="4" name="elm.operator" />
-                <capture number="5" name="elm.elm.identifier.function.name" />
+                <capture number="5" name="elm.identifier.function.name" />
             </scope>
             <scope name="elm.import">
                 <starts-with>
@@ -147,6 +147,43 @@
                     <scope name="elm.operator">
                         <expression>(\:)</expression>
                     </scope>
+                </subscopes>
+            </scope>
+            <scope name="elm.function.type-annotation">
+                <starts-with>
+                    <expression>^([a-z][A-Za-z0-9_]*)(?=\h+\:\s+)</expression>
+                    <capture number="1" name="elm.identifier.function.type-annotation" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\S)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.operator">
+                        <expression>(\-&gt;)</expression>
+                    </scope>
+                    <scope name="elm.operator">
+                        <expression>(\:)</expression>
+                    </scope>
+                </subscopes>
+            </scope>
+            <scope name="elm.function">
+                <symbol type="function">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>^(?!port|type)([a-z][A-Za-z0-9]*)\b(?!\h+\:)</expression>
+                    <capture number="0" name="elm.identifier.function" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=\=\s+)</expression>
+                </ends-with>
+                <subscopes>
+                    <scope name="elm.function.argument">
+                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                        <capture number="1" name="elm.identifier.argument" />
+                    </scope>
+                    <include syntax="self" collection="elm.helpers.type" />
                 </subscopes>
             </scope>
         </collection>
@@ -256,25 +293,6 @@
         -->
         <collection name="identifiers">
             <include syntax="self" collection="elm.helpers.type" />
-            <scope name="elm.identifier.function.type-annotation">
-                <expression>^([a-z][A-Za-z0-9_]*)\s(?=\:)</expression>
-            </scope>
-            <scope name="elm.function">
-                <starts-with>
-                    <expression>^([a-z][A-Za-z0-9_]*)</expression>
-                    <capture number="0" name="elm.identifier.function" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=\=$)</expression>
-                </ends-with>
-                <subscopes>
-                    <scope name="elm.function.argument">
-                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
-                        <capture number="1" name="elm.identifier.argument" />
-                    </scope>
-                    <include syntax="self" collection="elm.helpers.type" />
-                </subscopes>
-            </scope>
         </collection>
         <collection name="elm.helpers.type">
             <scope name="elm.identifier.type">
