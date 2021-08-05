@@ -205,6 +205,9 @@
             </scope>
             <include syntax="self" collection="strings" />
             <scope name="elm.collection.list">
+                <symbol type="block">
+                    <context behavior="subtree" />
+                </symbol>
                 <starts-with>
                     <expression>\[</expression>
                     <capture number="0" name="elm.bracket" />
