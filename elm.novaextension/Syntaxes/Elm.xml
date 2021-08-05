@@ -180,6 +180,7 @@
                     </scope>
                 </subscopes>
             </scope>
+            <!-- TODO: handle fn collapsing, let blocks, case, if/else collapsing using ElmLS? -->
             <scope name="elm.function">
                 <symbol type="function">
                     <context behavior="subtree" />
