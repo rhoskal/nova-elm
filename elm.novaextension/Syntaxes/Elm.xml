@@ -138,7 +138,7 @@
                     <capture number="3" name="elm.keyword.construct" />
                 </starts-with>
                 <ends-with>
-                    <expression>(?=^\n)$</expression>
+                    <expression>(?=^\w)|(?=\n$)</expression>
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
