@@ -45,6 +45,7 @@
         <pair open="{" close="}" />
         <pair open="[" close="]" />
         <pair open="(" close=")" />
+        <pair open="&apos;" close="&apos;" />
         <pair open="&quot;" close="&quot;" />
     </surrounding-pairs>
     
