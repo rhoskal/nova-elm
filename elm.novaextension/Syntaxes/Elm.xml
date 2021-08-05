@@ -128,9 +128,10 @@
                 </subscopes>
             </scope>
             <scope name="elm.port">
-                <expression>^(port\s)?([a-z][A-Za-z0-9_]*)\s(?=\:)</expression>
+                <expression>^(port)\h+([a-z][A-Za-z0-9_]*)\h+([:])(?=\s+)</expression>
                 <capture number="1" name="elm.keyword" />
                 <capture number="2" name="elm.identifier.function.type-annotation" />
+                <capture number="3" name="elm.keyword.construct" />
             </scope>
         </collection>
         
