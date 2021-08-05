@@ -128,10 +128,27 @@
                 </subscopes>
             </scope>
             <scope name="elm.port">
-                <expression>^(port)\h+([a-z][A-Za-z0-9_]*)\h+([:])(?=\s+)</expression>
-                <capture number="1" name="elm.keyword" />
-                <capture number="2" name="elm.identifier.function.type-annotation" />
-                <capture number="3" name="elm.keyword.construct" />
+                <symbol type="type">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>^(port)\h+([a-z][A-Za-z0-9_]*)\h+([:])(?=\s+)</expression>
+                    <capture number="1" name="elm.keyword" />
+                    <capture number="2" name="elm.identifier.function.type-annotation" />
+                    <capture number="3" name="elm.keyword.construct" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\n)$</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.operator">
+                        <expression>(\-&gt;)</expression>
+                    </scope>
+                    <scope name="elm.operator">
+                        <expression>(\:)</expression>
+                    </scope>
+                </subscopes>
             </scope>
         </collection>
         
