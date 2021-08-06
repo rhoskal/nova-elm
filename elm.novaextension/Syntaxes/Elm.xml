@@ -178,6 +178,9 @@
                     <scope name="elm.operator">
                         <expression>(\:)</expression>
                     </scope>
+                    <scope name="elm.value.symbol">
+                        <expression>(\(\))</expression>
+                    </scope>
                 </subscopes>
             </scope>
             <!-- TODO: handle fn collapsing, let blocks, case, if/else collapsing using ElmLS? -->
@@ -407,71 +410,108 @@
                 <expression>(\{ | \})</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\|&gt;)</expression>
+                <!-- -> -->
+                <expression>(\-&gt;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- <| -->
                 <expression>(&lt;\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- <= -->
+                <expression>(&lt;\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- << -->
                 <expression>(&lt;&lt;)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(&gt;&gt;)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(&amp;&amp;)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- < -->
                 <expression>(&lt;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- |> -->
+                <expression>(\|&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- >= -->
+                <expression>(&gt;\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- >> -->
+                <expression>(&gt;&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- > -->
                 <expression>(&gt;)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\=)</expression>
+                <!-- && -->
+                <expression>(&amp;&amp;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- == -->
                 <expression>(\=\=)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- = -->
+                <expression>(\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- /= -->
+                <expression>(\/\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- * -->
                 <expression>(\*)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\+)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(\-)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- ++ -->
                 <expression>(\+\+)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- + -->
+                <expression>(\+)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- - -->
+                <expression>(\-)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- :: -->
                 <expression>(::)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- : -->
+                <expression>(:)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- ^ -->
                 <expression>(\^)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\/)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- // -->
                 <expression>(\/\/)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- / -->
+                <expression>(\/)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- || -->
                 <expression>(\|\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- | -->
                 <expression>(\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- \\ -->
                 <expression>(\\)</expression>
             </scope>
-            <scope name="elm.operator">
+            <!-- <scope name="elm.operator">
                 <expression>(\.)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(:)</expression>
-            </scope>
+            </scope> -->
         </collection>
     </collections>
 </syntax>
