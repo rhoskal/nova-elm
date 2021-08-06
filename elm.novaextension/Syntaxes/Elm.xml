@@ -181,6 +181,12 @@
                     <scope name="elm.value.symbol">
                         <expression>(\(\))</expression>
                     </scope>
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
                 </subscopes>
             </scope>
             <!-- TODO: handle fn collapsing, let blocks, case, if/else collapsing using ElmLS? -->
@@ -201,6 +207,12 @@
                         <capture number="1" name="elm.identifier.argument" />
                     </scope>
                     <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
                 </subscopes>
             </scope>
         </collection>
@@ -400,13 +412,13 @@
                     <include syntax="self" />
                 </subscopes>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.parens">
                 <expression>(\[ | \])</expression>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.square">
                 <expression>(\( | \))</expression>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.curly">
                 <expression>(\{ | \})</expression>
             </scope>
             <scope name="elm.operator">
