@@ -160,6 +160,12 @@
                     <scope name="elm.operator">
                         <expression>(\:)</expression>
                     </scope>
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
                 </subscopes>
             </scope>
             <scope name="elm.function.type-annotation">
