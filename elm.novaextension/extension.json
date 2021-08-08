@@ -18,9 +18,16 @@
   },
   "config": [
     {
+      "key": "hansjhoffman.elm.config.elmPath",
+      "title": "Elm Path",
+      "description": "The path to your elm executable.",
+      "link": "https://github.com/elm/compiler",
+      "type": "path"
+    },
+    {
       "key": "hansjhoffman.elm.config.elmFormatPath",
       "title": "Elm Formatter Path",
-      "description": "The path (absolute) to your elm-format binary.",
+      "description": "The path to your elm-format executable.",
       "link": "https://github.com/avh4/elm-format",
       "type": "path"
     },
@@ -30,13 +37,57 @@
       "description": "Format document when saved.",
       "type": "boolean",
       "default": false
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewPath",
+      "title": "Elm Review Path",
+      "description": "The path to your elm-review executable.",
+      "link": "https://github.com/jfmengels/elm-review",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTestPath",
+      "title": "Elm Test Path",
+      "description": "The path to your elm-test executable.",
+      "link": "https://github.com/rtfeldman/node-test-runner",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewDiagnostics",
+      "title": "Elm Review Diagnostics",
+      "description": "Set severity or disable linting diagnostics for elm-review.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTrace",
+      "title": "LS Tracing",
+      "description": "Traces the communication between Nova and the language server.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.disableLSDiagnostics",
+      "title": "Disable Language Server Diagnostics",
+      "description": "Disable linting diagnostics from the language server.",
+      "type": "boolean",
+      "default": false
     }
   ],
   "configWorkspace": [
     {
+      "key": "hansjhoffman.elm.config.elmPath",
+      "title": "Elm Path",
+      "description": "The path to your elm executable.",
+      "link": "https://github.com/elm/compiler",
+      "type": "path"
+    },
+    {
       "key": "hansjhoffman.elm.config.elmFormatPath",
       "title": "Elm Formatter Path",
-      "description": "The path (absolute) to your elm-format binary.",
+      "description": "The path to your elm-format executable.",
       "link": "https://github.com/avh4/elm-format",
       "type": "path"
     },
@@ -44,6 +95,43 @@
       "key": "hansjhoffman.elm.config.formatOnSave",
       "title": "Format on Save",
       "description": "Format document when saved.",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewPath",
+      "title": "Elm Review Path",
+      "description": "The path to your elm-review executable.",
+      "link": "https://github.com/jfmengels/elm-review",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTestPath",
+      "title": "Elm Test Path",
+      "description": "The path to your elm-test executable.",
+      "link": "https://github.com/rtfeldman/node-test-runner",
+      "type": "path"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmReviewDiagnostics",
+      "title": "Elm Review Diagnostics",
+      "description": "Set severity or disable linting diagnostics for elm-review.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.elmTrace",
+      "title": "LS Tracing",
+      "description": "Traces the communication between Nova and the language server.",
+      "type": "enum",
+      "values": ["error", "off", "warning"],
+      "default": "off"
+    },
+    {
+      "key": "hansjhoffman.elm.config.disableLSDiagnostics",
+      "title": "Disable Language Server Diagnostics",
+      "description": "Disable linting diagnostics from the language server.",
       "type": "boolean",
       "default": false
     }
