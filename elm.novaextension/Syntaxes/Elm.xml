@@ -193,7 +193,9 @@
                     <expression>(?=\=\s+)</expression>
                 </ends-with>
                 <subscopes>
-                    <include syntax="self" collection="keywords" />
+                    <scope name="elm.keyword.modifier">
+                        <expression>\b(as)\b</expression>
+                    </scope>
                     <scope name="elm.function.argument">
                         <expression>\b([a-z][A-Za-z0-9_]*)</expression>
                         <capture number="1" name="elm.identifier.argument" />
