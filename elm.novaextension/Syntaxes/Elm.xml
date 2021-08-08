@@ -157,7 +157,7 @@
                     <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
-            <scope name="elm.function.type-annotation">
+            <scope name="elm.type-annotation">
                 <starts-with>
                     <expression>^([a-z][A-Za-z0-9_]*)(?=\h+\:\s+)</expression>
                     <capture number="1" name="elm.identifier.function.type-annotation" />
@@ -251,14 +251,6 @@
                     <string>False</string>
                 </strings>
             </scope>
-            <scope name="elm.value.symbol.type-constructor">
-                <strings>
-                    <string>Just</string>
-                    <string>Nothing</string>
-                    <string>Ok</string>
-                    <string>Err</string>
-                </strings>
-            </scope>
             <scope name="elm.value.number.float.exponent">
                 <expression>\b[0-9][0-9]*(\.[0-9][0-9]*)?e[+-]?[0-9]+\b</expression>
             </scope>
@@ -278,20 +270,17 @@
                 </symbol>
                 <starts-with>
                     <expression>\[</expression>
-                    <capture number="0" name="elm.bracket" />
+                    <capture number="0" name="elm.bracket.square" />
                 </starts-with>
                 <ends-with>
                     <expression>\]</expression>
-                    <capture number="0" name="elm.bracket" />
+                    <capture number="0" name="elm.bracket.square" />
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="values" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <include syntax="self" collection="syntax" />
-                    <scope name="elm.comma">
-                        <expression>,</expression>
-                    </scope>
                 </subscopes>
             </scope>
         </collection>
@@ -306,6 +295,20 @@
             o888o `Y8bod88P" `Y8bod8P' o888o o888o   "888" o888o o888o   o888o `Y8bod8P' d888b    8""888P' 
         -->
         <collection name="identifiers">
+            <scope name="elm.identifier.type.core.constructor">
+                <strings>
+                    <!-- Maybe -->
+                    <string>Just</string>
+                    <string>Nothing</string>
+                    <!-- Order -->
+                    <string>LT</string>
+                    <string>EQ</string>
+                    <string>GT</string>
+                    <!-- Result -->
+                    <string>Ok</string>
+                    <string>Err</string>
+                </strings>
+            </scope>
             <include syntax="self" collection="elm.helpers.type" />
         </collection>
         <collection name="elm.helpers.type">
@@ -478,7 +481,7 @@
                 <!-- :: -->
                 <expression>(::)</expression>
             </scope>
-            <scope name="elm.colon">
+            <scope name="elm.operator.colon">
                 <!-- : -->
                 <expression>(:)</expression>
             </scope>
