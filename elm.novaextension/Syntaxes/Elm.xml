@@ -154,6 +154,9 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.identifier.type-variable">
+                        <expression>([a-z][a-z]*)</expression>
+                    </scope>
                     <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
@@ -170,6 +173,9 @@
                     <scope name="elm.value.symbol.unit-type">
                         <!-- unit type -->
                         <expression>(\(\))</expression>
+                    </scope>
+                    <scope name="elm.identifier.type-variable">
+                        <expression>([a-z][a-z]*)</expression>
                     </scope>
                     <include syntax="self" collection="syntax" />
                 </subscopes>
@@ -192,12 +198,7 @@
                         <capture number="1" name="elm.identifier.argument" />
                     </scope>
                     <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.comma">
-                        <expression>,</expression>
-                    </scope>
-                    <scope name="elm.bracket.parens">
-                        <expression>(\(|\))</expression>
-                    </scope>
+                    <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
         </collection>
@@ -515,6 +516,9 @@
             </scope>
             <scope name="elm.dot">
                 <expression>(\.)</expression>
+            </scope>
+            <scope name="elm.underscore">
+                <expression>\b_\b</expression>
             </scope>
         </collection>
     </collections>
