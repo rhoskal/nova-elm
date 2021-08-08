@@ -154,18 +154,7 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.operator">
-                        <expression>(\-&gt;)</expression>
-                    </scope>
-                    <scope name="elm.operator">
-                        <expression>(\:)</expression>
-                    </scope>
-                    <scope name="elm.comma">
-                        <expression>,</expression>
-                    </scope>
-                    <scope name="elm.bracket.parens">
-                        <expression>(\(|\))</expression>
-                    </scope>
+                    <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
             <scope name="elm.function.type-annotation">
@@ -178,21 +167,11 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.operator">
-                        <expression>(\-&gt;)</expression>
-                    </scope>
-                    <scope name="elm.operator">
-                        <expression>(\:)</expression>
-                    </scope>
-                    <scope name="elm.value.symbol">
+                    <scope name="elm.value.symbol.unit-type">
+                        <!-- unit type -->
                         <expression>(\(\))</expression>
                     </scope>
-                    <scope name="elm.comma">
-                        <expression>,</expression>
-                    </scope>
-                    <scope name="elm.bracket.parens">
-                        <expression>(\(|\))</expression>
-                    </scope>
+                    <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
             <!-- TODO: handle fn collapsing, let blocks, case, if/else collapsing using ElmLS? -->
@@ -418,56 +397,56 @@
                     <include syntax="self" />
                 </subscopes>
             </scope>
-            <scope name="elm.bracket.parens">
+            <scope name="elm.bracket.square">
                 <expression>(\[ | \])</expression>
             </scope>
-            <scope name="elm.bracket.square">
+            <scope name="elm.bracket.parens">
                 <expression>(\( | \))</expression>
             </scope>
             <scope name="elm.bracket.curly">
                 <expression>(\{ | \})</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.arrow">
                 <!-- -> -->
                 <expression>(\-&gt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.apL">
                 <!-- <| -->
                 <expression>(&lt;\|)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.le">
                 <!-- <= -->
                 <expression>(&lt;\=)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.composeL">
                 <!-- << -->
                 <expression>(&lt;&lt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.lt">
                 <!-- < -->
                 <expression>(&lt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.apR">
                 <!-- |> -->
                 <expression>(\|&gt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.gt">
                 <!-- >= -->
                 <expression>(&gt;\=)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.composeR">
                 <!-- >> -->
                 <expression>(&gt;&gt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.gt">
                 <!-- > -->
                 <expression>(&gt;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.and">
                 <!-- && -->
                 <expression>(&amp;&amp;)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.eq">
                 <!-- == -->
                 <expression>(\=\=)</expression>
             </scope>
@@ -475,47 +454,47 @@
                 <!-- = -->
                 <expression>(\=)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.neq">
                 <!-- /= -->
                 <expression>(\/\=)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.mul">
                 <!-- * -->
                 <expression>(\*)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.append">
                 <!-- ++ -->
                 <expression>(\+\+)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.add">
                 <!-- + -->
                 <expression>(\+)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.sub">
                 <!-- - -->
                 <expression>(\-)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.cons">
                 <!-- :: -->
                 <expression>(::)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.colon">
                 <!-- : -->
                 <expression>(:)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.pow">
                 <!-- ^ -->
                 <expression>(\^)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.idiv">
                 <!-- // -->
                 <expression>(\/\/)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.div">
                 <!-- / -->
                 <expression>(\/)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.or">
                 <!-- || -->
                 <expression>(\|\|)</expression>
             </scope>
@@ -523,13 +502,17 @@
                 <!-- | -->
                 <expression>(\|)</expression>
             </scope>
-            <scope name="elm.operator">
+            <scope name="elm.operator.anonymous-fn">
                 <!-- \\ -->
                 <expression>(\\)</expression>
             </scope>
-            <!-- <scope name="elm.operator">
+
+            <scope name="elm.comma">
+                <expression>,</expression>
+            </scope>
+            <scope name="elm.dot">
                 <expression>(\.)</expression>
-            </scope> -->
+            </scope>
         </collection>
     </collections>
 </syntax>
