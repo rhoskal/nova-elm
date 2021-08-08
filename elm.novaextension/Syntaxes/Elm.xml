@@ -45,6 +45,7 @@
         <pair open="{" close="}" />
         <pair open="[" close="]" />
         <pair open="(" close=")" />
+        <pair open="&apos;" close="&apos;" />
         <pair open="&quot;" close="&quot;" />
     </surrounding-pairs>
     
@@ -99,12 +100,27 @@
         -->
         <collection name="definitions">
             <scope name="elm.infix">
-                <expression>^(infix)\s+\w+\s+(\d+)\s+\((.+)\)\s+(\=)\s+(\w+)$</expression>
+                <expression>
+                    (?x:                   # turn on extended mode, allows arbitrary whitespace
+                        ^(infix)           # line must start with keyword
+                        \s+                # whitespace
+                        [A-Za-z0-9_]+      # one or more alphanumeric
+                        \s+                # whitespace
+                        ([0-9]+)           # one or more digit
+                        \s+                # whitespace
+                        \((.+)\)           # '(' + blah + ')'
+                        \s+                # whitespace
+                        (\=)               # equals
+                        \s+                # whitespace
+                        ([A-Za-z0-9_]+)    # one or more alphanumeric
+                        $                  # EOL
+                    )
+                </expression>
                 <capture number="1" name="elm.keyword" />
                 <capture number="2" name="elm.value.number.integer" />
                 <capture number="3" name="elm.operator" />
                 <capture number="4" name="elm.operator" />
-                <capture number="5" name="elm.elm.identifier.function.name" />
+                <capture number="5" name="elm.identifier.function.name" />
             </scope>
             <scope name="elm.import">
                 <starts-with>
@@ -119,15 +135,91 @@
                     <include syntax="self" collection="syntax" />
                     <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.import.function">
-                        <expression>\b([a-z]\w*)</expression>
+                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
                         <capture number="1" name="elm.identifier.function.name" />
                     </scope>
                 </subscopes>
             </scope>
             <scope name="elm.port">
-                <expression>^(port\s)?([a-z]\w*)\s(?=\:)</expression>
-                <capture number="1" name="elm.keyword" />
-                <capture number="2" name="elm.identifier.function.type-annotation" />
+                <symbol type="type">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>^(port)\h+([a-z][A-Za-z0-9_]*)(?=\h+\:\s+)</expression>
+                    <capture number="1" name="elm.keyword" />
+                    <capture number="2" name="elm.identifier.function.type-annotation" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^[A-Za-z0-9_])|(?=\n$)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.operator">
+                        <expression>(\-&gt;)</expression>
+                    </scope>
+                    <scope name="elm.operator">
+                        <expression>(\:)</expression>
+                    </scope>
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
+                </subscopes>
+            </scope>
+            <scope name="elm.function.type-annotation">
+                <starts-with>
+                    <expression>^([a-z][A-Za-z0-9_]*)(?=\h+\:\s+)</expression>
+                    <capture number="1" name="elm.identifier.function.type-annotation" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\S)</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.operator">
+                        <expression>(\-&gt;)</expression>
+                    </scope>
+                    <scope name="elm.operator">
+                        <expression>(\:)</expression>
+                    </scope>
+                    <scope name="elm.value.symbol">
+                        <expression>(\(\))</expression>
+                    </scope>
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
+                </subscopes>
+            </scope>
+            <!-- TODO: handle fn collapsing, let blocks, case, if/else collapsing using ElmLS? -->
+            <scope name="elm.function">
+                <symbol type="function">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>^(?!port|type)([a-z][A-Za-z0-9]*)\b(?!\h+\:)</expression>
+                    <capture number="0" name="elm.identifier.function" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=\=\s+)</expression>
+                </ends-with>
+                <subscopes>
+                    <scope name="elm.function.argument">
+                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                        <capture number="1" name="elm.identifier.argument" />
+                    </scope>
+                    <include syntax="self" collection="elm.helpers.type" />
+                    <scope name="elm.comma">
+                        <expression>,</expression>
+                    </scope>
+                    <scope name="elm.bracket.parens">
+                        <expression>(\(|\))</expression>
+                    </scope>
+                </subscopes>
             </scope>
         </collection>
         
@@ -192,16 +284,19 @@
                 <expression>\b[0-9][0-9]*(\.[0-9][0-9]*)?e[+-]?[0-9]+\b</expression>
             </scope>
             <scope name="elm.value.number.float">
-                <expression>([-]?\d+\.\d+)\b</expression>
+                <expression>([-]?[0-9]+\.[0-9]+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer">
-                <expression>(?&lt;=\s|\()(?!0\d+)(\-?\d+)\b</expression>
+                <expression>(?&lt;=\s|\()(?!0[0-9]+)([-]?[0-9]+)\b</expression>
             </scope>
             <scope name="elm.value.number.integer.hexadecimal">
                 <expression>\b(0x[a-fA-F0-9_]+)\b</expression>
             </scope>
             <include syntax="self" collection="strings" />
             <scope name="elm.collection.list">
+                <symbol type="block">
+                    <context behavior="subtree" />
+                </symbol>
                 <starts-with>
                     <expression>\[</expression>
                     <capture number="0" name="elm.bracket" />
@@ -233,25 +328,6 @@
         -->
         <collection name="identifiers">
             <include syntax="self" collection="elm.helpers.type" />
-            <scope name="elm.identifier.function.type-annotation">
-                <expression>^([a-z]\w*)\s(?=\:)</expression>
-            </scope>
-            <scope name="elm.function">
-                <starts-with>
-                    <expression>^([a-z]\w*)</expression>
-                    <capture number="0" name="elm.identifier.function" />
-                </starts-with>
-                <ends-with>
-                    <expression>(?=\=$)</expression>
-                </ends-with>
-                <subscopes>
-                    <scope name="elm.function.argument">
-                        <expression>\b([a-z]\w*)</expression>
-                        <capture number="1" name="elm.identifier.argument" />
-                    </scope>
-                    <include syntax="self" collection="elm.helpers.type" />
-                </subscopes>
-            </scope>
         </collection>
         <collection name="elm.helpers.type">
             <scope name="elm.identifier.type">
@@ -342,81 +418,118 @@
                     <include syntax="self" />
                 </subscopes>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.parens">
                 <expression>(\[ | \])</expression>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.square">
                 <expression>(\( | \))</expression>
             </scope>
-            <scope name="elm.bracket">
+            <scope name="elm.bracket.curly">
                 <expression>(\{ | \})</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\|&gt;)</expression>
+                <!-- -> -->
+                <expression>(\-&gt;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- <| -->
                 <expression>(&lt;\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- <= -->
+                <expression>(&lt;\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- << -->
                 <expression>(&lt;&lt;)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(&gt;&gt;)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(&amp;&amp;)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- < -->
                 <expression>(&lt;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- |> -->
+                <expression>(\|&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- >= -->
+                <expression>(&gt;\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- >> -->
+                <expression>(&gt;&gt;)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- > -->
                 <expression>(&gt;)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\=)</expression>
+                <!-- && -->
+                <expression>(&amp;&amp;)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- == -->
                 <expression>(\=\=)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- = -->
+                <expression>(\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- /= -->
+                <expression>(\/\=)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- * -->
                 <expression>(\*)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\+)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(\-)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- ++ -->
                 <expression>(\+\+)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- + -->
+                <expression>(\+)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- - -->
+                <expression>(\-)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- :: -->
                 <expression>(::)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- : -->
+                <expression>(:)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- ^ -->
                 <expression>(\^)</expression>
             </scope>
             <scope name="elm.operator">
-                <expression>(\/)</expression>
-            </scope>
-            <scope name="elm.operator">
+                <!-- // -->
                 <expression>(\/\/)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- / -->
+                <expression>(\/)</expression>
+            </scope>
+            <scope name="elm.operator">
+                <!-- || -->
                 <expression>(\|\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- | -->
                 <expression>(\|)</expression>
             </scope>
             <scope name="elm.operator">
+                <!-- \\ -->
                 <expression>(\\)</expression>
             </scope>
-            <scope name="elm.operator">
+            <!-- <scope name="elm.operator">
                 <expression>(\.)</expression>
-            </scope>
-            <scope name="elm.operator">
-                <expression>(:)</expression>
-            </scope>
+            </scope> -->
         </collection>
     </collections>
 </syntax>
