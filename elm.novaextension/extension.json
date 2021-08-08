@@ -20,14 +20,14 @@
     {
       "key": "hansjhoffman.elm.config.elmPath",
       "title": "Elm Path",
-      "description": "???",
+      "description": "The path to your elm executable.",
       "link": "https://github.com/elm/compiler",
       "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
       "title": "Elm Formatter Path",
-      "description": "???",
+      "description": "The path to your elm-format executable.",
       "link": "https://github.com/avh4/elm-format",
       "type": "path"
     },
@@ -41,14 +41,14 @@
     {
       "key": "hansjhoffman.elm.config.elmReviewPath",
       "title": "Elm Review Path",
-      "description": "???",
+      "description": "The path to your elm-review executable.",
       "link": "https://github.com/jfmengels/elm-review",
       "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmTestPath",
       "title": "Elm Test Path",
-      "description": "???",
+      "description": "The path to your elm-test executable.",
       "link": "https://github.com/rtfeldman/node-test-runner",
       "type": "path"
     },
@@ -80,14 +80,14 @@
     {
       "key": "hansjhoffman.elm.config.elmPath",
       "title": "Elm Path",
-      "description": "???",
+      "description": "The path to your elm executable.",
       "link": "https://github.com/elm/compiler",
       "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmFormatPath",
       "title": "Elm Formatter Path",
-      "description": "???",
+      "description": "The path to your elm-format executable.",
       "link": "https://github.com/avh4/elm-format",
       "type": "path"
     },
@@ -101,14 +101,14 @@
     {
       "key": "hansjhoffman.elm.config.elmReviewPath",
       "title": "Elm Review Path",
-      "description": "???",
+      "description": "The path to your elm-review executable.",
       "link": "https://github.com/jfmengels/elm-review",
       "type": "path"
     },
     {
       "key": "hansjhoffman.elm.config.elmTestPath",
       "title": "Elm Test Path",
-      "description": "???",
+      "description": "The path to your elm-test executable.",
       "link": "https://github.com/rtfeldman/node-test-runner",
       "type": "path"
     },
