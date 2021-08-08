@@ -4,7 +4,7 @@
 
 ![CI](https://github.com/hansjhoffman/nova-elm/actions/workflows/main.yml/badge.svg?branch=master)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)
-![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
+![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)
 ![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)
 
