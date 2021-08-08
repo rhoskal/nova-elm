@@ -99,28 +99,33 @@
             `Y8bod88P" `Y8bod8P' o888o   o888o o888o o888o o888o   "888" o888o `Y8bod8P' o888o o888o 8""888P' 
         -->
         <collection name="definitions">
-            <scope name="elm.infix">
+            <scope name="elm.definition.infix">
                 <expression>
-                    (?x:                   # turn on extended mode, allows arbitrary whitespace
-                        ^(infix)           # line must start with keyword
-                        \s+                # whitespace
-                        [A-Za-z0-9_]+      # one or more alphanumeric
-                        \s+                # whitespace
-                        ([0-9]+)           # one or more digit
-                        \s+                # whitespace
-                        \((.+)\)           # '(' + blah + ')'
-                        \s+                # whitespace
-                        (\=)               # equals
-                        \s+                # whitespace
-                        ([A-Za-z0-9_]+)    # one or more alphanumeric
-                        $                  # EOL
+                    (?x:                     # turn on extended mode, allows arbitrary whitespace
+                        ^(infix)             # line must start with keyword
+                        \h+                  # whitespace
+                        ([A-Za-z0-9_]+)      # one or more alphanumeric
+                        \h+                  # whitespace
+                        ([0-9]+)             # one or more digit
+                        \h+                  # whitespace
+                        (\()                 # match '('
+                        (.+)                 # operator
+                        (\))                 # match ')'
+                        \h+                  # whitespace
+                        (\=)                 # match '='
+                        \h+                  # whitespace
+                        ([a-z][A-Za-z0-9_]*) # one or more alphanumeric
+                        $                    # EOL
                     )
                 </expression>
-                <capture number="1" name="elm.keyword" />
-                <capture number="2" name="elm.value.number.integer" />
-                <capture number="3" name="elm.operator" />
-                <capture number="4" name="elm.operator" />
-                <capture number="5" name="elm.identifier.function.name" />
+                <capture number="1" name="elm.keyword.infix" />
+                <capture number="2" name="elm.identifier" />
+                <capture number="3" name="elm.value.number.integer" />
+                <capture number="4" name="elm.bracket.parens.open" />
+                <capture number="5" name="elm.operator" />
+                <capture number="6" name="elm.bracket.parens.close" />
+                <capture number="7" name="elm.operator.equals" />
+                <capture number="8" name="elm.identifier.function.name" />
             </scope>
             <scope name="elm.import">
                 <starts-with>
