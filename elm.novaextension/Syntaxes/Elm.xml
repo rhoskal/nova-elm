@@ -127,24 +127,71 @@
                 <capture number="7" name="elm.operator.equals" />
                 <capture number="8" name="elm.identifier.function.name" />
             </scope>
-            <scope name="elm.import">
+            
+            <scope name="elm.module">
                 <starts-with>
-                    <expression>^(effect|import|module|port\s+module)</expression>
-                    <capture number="0" name="elm.keyword" />
+                    <expression>^(module|port\h+module)</expression>
+                    <capture number="1" name="elm.keyword.statement.module" />
                 </starts-with>
                 <ends-with>
                     <expression>(?=^\S)</expression>
                 </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="keywords" />
-                    <include syntax="self" collection="syntax" />
-                    <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.import.function">
-                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
-                        <capture number="1" name="elm.identifier.function.name" />
+                <subscopes anchored="true">
+                    <scope name="elm.module.name" repeat="true">
+                        <expression>([A-Z][A-Za-z0-9_]*)(\.)?</expression>
+                        <capture number="1" name="elm.identifier" />
+                        <capture number="2" name="elm.dot" />
                     </scope>
+                    <include syntax="self" collection="elm.exposing" />
                 </subscopes>
             </scope>
+            <scope name="elm.import">
+                <starts-with>
+                    <expression>^(import)</expression>
+                    <capture number="1" name="elm.keyword.statement.import" />
+                </starts-with>
+                <ends-with>
+                    <expression>(?=^\S)</expression>
+                </ends-with>
+                <subscopes anchored="true">
+                    <scope name="elm.import.module" repeat="true">
+                        <expression>([A-Z][A-Za-z0-9_]*)(\.)?</expression>
+                        <capture number="1" name="elm.identifier" />
+                        <capture number="2" name="elm.dot" />
+                    </scope>
+                    <scope name="elm.import.as" optional="true">
+                        <expression>(as)\h+([A-Z][A-Za-z0-9_]*)</expression>
+                        <capture number="1" name="elm.keyword.modifier" />
+                        <capture number="2" name="elm.identifier" />
+                    </scope>
+                    <include syntax="self" collection="elm.exposing" />
+                </subscopes>
+            </scope>
+            <scope name="elm.exposing" optional="true">
+                <starts-with>
+                    <expression>(exposing)\h+(\()</expression>
+                    <capture number="1" name="elm.keyword.exposing" />
+                    <capture number="2" name="elm.bracket.parens.open" />
+                </starts-with>
+                <ends-with>
+                    <expression>(\))$</expression>
+                    <capture number="1" name="elm.bracket.parens.close" />
+                </ends-with>
+                <subscopes>
+                    <scope name="elm.identifier.type" optional="true" repeat="true">
+                        <expression>\b([A-Z][A-Za-z0-9_]*)</expression>
+                    </scope>
+                    <scope name="elm.identifier.function.name" optional="true" repeat="true">
+                        <expression>\b([a-z][A-Za-z0-9_]*)</expression>
+                    </scope>
+                    <scope name="elm.identifier" optional="true" repeat="true">
+                        <!-- (..) -->
+                        <expression>(\.\.)</expression>
+                    </scope>
+                    <include syntax="self" collection="syntax" optional="true" repeat="true" />
+                </subscopes>
+            </scope>
+            
             <scope name="elm.port">
                 <symbol type="type">
                     <context behavior="subtree" />
