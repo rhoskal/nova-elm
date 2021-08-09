@@ -206,7 +206,7 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.identifier.type-variable">
+                    <scope name="elm.identifier.type.variable">
                         <expression>([a-z][a-z]*)</expression>
                     </scope>
                     <include syntax="self" collection="syntax" />
@@ -222,11 +222,11 @@
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.value.symbol.unit-type">
+                    <scope name="elm.identifier.type.unit">
                         <!-- unit type -->
                         <expression>(\(\))</expression>
                     </scope>
-                    <scope name="elm.identifier.type-variable">
+                    <scope name="elm.identifier.type.variable">
                         <expression>([a-z][a-z]*)</expression>
                     </scope>
                     <include syntax="self" collection="syntax" />
@@ -326,19 +326,57 @@
                 </symbol>
                 <starts-with>
                     <expression>\[</expression>
-                    <capture number="0" name="elm.bracket.square" />
+                    <capture number="0" name="elm.bracket.square.open" />
                 </starts-with>
                 <ends-with>
                     <expression>\]</expression>
-                    <capture number="0" name="elm.bracket.square" />
+                    <capture number="0" name="elm.bracket.square.close" />
                 </ends-with>
                 <subscopes>
                     <include syntax="self" collection="comments" />
                     <include syntax="self" collection="values" />
-                    <include syntax="self" collection="elm.helpers.type" />
+                    <include syntax="self" collection="identifiers" />
                     <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
+            <scope name="elm.collection.record">
+                <symbol type="block">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>\{</expression>
+                    <capture number="0" name="elm.bracket.curly.open" />
+                </starts-with>
+                <ends-with>
+                    <expression>\}</expression>
+                    <capture number="0" name="elm.bracket.curly.close" />
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="comments" />
+                    <include syntax="self" collection="keywords" />
+                    <include syntax="self" collection="values" />
+                    <scope name="elm.record.key-expression">
+                        <expression>([a-z][A-Za-z0-9]*)\s+(\=)</expression>
+                        <capture number="1" name="elm.identifier.key.name" />
+                        <capture number="2" name="elm.operator" />
+                    </scope>
+                    <include syntax="self" collection="identifiers" />
+                    <include syntax="self" collection="syntax" />
+                </subscopes>
+            </scope>
+            <!-- <scope name="elm.collection.tuple">
+                <symbol type="block">
+                    <context behavior="subtree" />
+                </symbol>
+                <starts-with>
+                    <expression>\(</expression>
+                    <capture number="0" name="elm.bracket.parens.open" />
+                </starts-with>
+                <ends-with>
+                    <expression>\)</expression>
+                    <capture number="0" name="elm.bracket.parens.close" />
+                </ends-with>
+            </scope> -->
         </collection>
         
         <!-- 
@@ -366,6 +404,9 @@
                 </strings>
             </scope>
             <include syntax="self" collection="elm.helpers.type" />
+            <scope name="elm.identifier">
+                <expression>([a-z][A-Za-z0-9_]*)</expression>
+            </scope>
         </collection>
         <collection name="elm.helpers.type">
             <scope name="elm.identifier.type">
@@ -440,22 +481,6 @@
                       `Y8P'
         -->
         <collection name="syntax">
-            <scope name="elm.block.records">
-                <symbol type="block">
-                    <context behavior="subtree" />
-                </symbol>
-                <starts-with>
-                    <expression>\{</expression>
-                    <capture number="0" name="elm.bracket" />
-                </starts-with>
-                <ends-with>
-                    <expression>\}</expression>
-                    <capture number="0" name="elm.bracket" />
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" />
-                </subscopes>
-            </scope>
             <scope name="elm.bracket.square">
                 <expression>(\[ | \])</expression>
             </scope>
