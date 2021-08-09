@@ -191,7 +191,10 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
           );
 
           const serverOptions: ServerOptions = {
-            path: mkExtensionDepsPath("elm-language-server"),
+            path: nova.path.join(
+              extensionDir,
+              "node_modules/@elm-tooling/elm-language-server/out/index.js",
+            ),
             type: "stdio",
           };
 
