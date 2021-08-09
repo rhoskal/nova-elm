@@ -1,3 +1,19 @@
+## v0.4.0 - 2021-08-08
+
+### Chore & Maintenance
+
+- `[core]` Update extension and dev deps.
+- `[syntax]` Lots of internal renaming for better maintenance.
+
+### Features
+
+- `[language-server]` Initial (partial) Language Server support. ([#26](https://github.com/hansjhoffman/nova-elm/pull/26))
+
+### Fixes
+
+- `[syntax]` Scoped name fixes for better support of different themes. ([#27](https://github.com/hansjhoffman/nova-elm/pull/27))
+- `[syntax]` Make lists foldable. ([#25](https://github.com/hansjhoffman/nova-elm/pull/25))
+
 ## v0.3.0 - 2021-08-03
 
 ### Chore & Maintenance
