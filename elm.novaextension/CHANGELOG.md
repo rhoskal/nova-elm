@@ -1,3 +1,9 @@
+## v0.5.0 - 2021-08-08
+
+### Fixes
+
+- `[language-server]` Don't use `node_modules/.bin` path for server. ([#29](https://github.com/hansjhoffman/nova-elm/pull/29))
+
 ## v0.4.0 - 2021-08-08
 
 ### Chore & Maintenance
