@@ -205,10 +205,7 @@
                     <expression>(?=^[A-Za-z0-9_])|(?=\n$)</expression>
                 </ends-with>
                 <subscopes>
-                    <include syntax="self" collection="elm.helpers.type" />
-                    <scope name="elm.identifier.type.variable">
-                        <expression>([a-z][a-z]*)</expression>
-                    </scope>
+                    <include syntax="self" collection="identifiers" />
                     <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
@@ -221,14 +218,11 @@
                     <expression>(?=^\S)</expression>
                 </ends-with>
                 <subscopes>
-                    <include syntax="self" collection="elm.helpers.type" />
                     <scope name="elm.identifier.type.unit">
                         <!-- unit type -->
                         <expression>(\(\))</expression>
                     </scope>
-                    <scope name="elm.identifier.type.variable">
-                        <expression>([a-z][a-z]*)</expression>
-                    </scope>
+                    <include syntax="self" collection="identifiers" />
                     <include syntax="self" collection="syntax" />
                 </subscopes>
             </scope>
