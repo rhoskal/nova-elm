@@ -3,10 +3,6 @@
     "build" : {
       "enabled" : true,
       "script" : "#!\/bin\/sh\n\nnix-shell --run \"make build\""
-    },
-    "run" : {
-      "enabled" : true,
-      "script" : "#!\/bin\/sh\n\nnix-shell --run \"make run\""
     }
   },
   "identifier" : "4EC7BE03-45C3-411D-8536-89A5451EEB67",
