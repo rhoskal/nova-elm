@@ -35,8 +35,8 @@ targets:
 # -------------------
 
 .PHONY: build
-build: ## Make a production build
-	yarn rollup --config rollup.config.ts --configPlugin typescript
+build: compile ## Transpile TypeScript
+	yarn esbuild --bundle --platform=node --target=es6 --minify --outfile=elm.novaextension/Scripts/main.cjs.min.js src/index.ts
 
 .PHONY: clean
 clean: ## Remove build artifacts
@@ -68,7 +68,3 @@ lint: ## Lint code
 .PHONY: lint
 lint-fix: ## Lint code w/ fixes
 	yarn eslint 'src/**/*.ts' --fix
-	
-.PHONY: run
-run: ## Watch for code changes and recompile
-	yarn watch 'yarn build' src
