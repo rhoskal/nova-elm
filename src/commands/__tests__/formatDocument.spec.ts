@@ -22,7 +22,7 @@ const mockEditor = {
 } as unknown;
 
 describe("[Commands] Format Document", () => {
-  test.skip("Failure - General Error", () => {
+  test("Failure - General Error", async () => {
     const globalPath: string = "path/to/global/elm-format";
 
     const mockPreferences: UserPreferences = {
@@ -50,7 +50,7 @@ describe("[Commands] Format Document", () => {
 
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
-    formatDocument(mockPreferences)(mockEditor as TextEditor);
+    await formatDocument(mockPreferences)(mockEditor as TextEditor);
 
     expect(consoleSpy).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith("Failed to format the document.");
