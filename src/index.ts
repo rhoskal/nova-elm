@@ -8,45 +8,14 @@ import * as D from "io-ts/Decoder";
 import { Lens } from "monocle-ts";
 import { match } from "ts-pattern";
 
+import { formatDocument } from "./commands/formatDocument";
+import * as selectors from "./selectors";
 import { isFalse } from "./typeGuards";
+import { Behavior, ExtensionConfigKeys, UserPreferences } from "./types";
 
 /*
  * Types
  */
-
-enum ExtensionConfigKeys {
-  ElmPath = "hansjhoffman.elm.config.elmPath",
-  ElmFormatPath = "hansjhoffman.elm.config.elmFormatPath",
-  ElmReviewPath = "hansjhoffman.elm.config.elmReviewPath",
-  ElmTestPath = "hansjhoffman.elm.config.elmTestPath",
-  FormatDocument = "hansjhoffman.elm.commands.formatDocument",
-  FormatOnSave = "hansjhoffman.elm.config.formatOnSave",
-  LSDisableDiagnostics = "hansjhoffman.elm.config.disableDiagnostics",
-  LSReviewDiagnostics = "hansjhoffman.elm.config.elmReviewDiagnostics",
-  LSTrace = "hansjhoffman.elm.config.elmTrace",
-  Reload = "hansjhoffman.elm.config.reload",
-}
-
-interface Preferences {
-  readonly elmPath: O.Option<string>;
-  readonly elmFormatPath: O.Option<string>;
-  readonly elmReviewPath: O.Option<string>;
-  readonly elmTestPath: O.Option<string>;
-  readonly formatOnSave: O.Option<boolean>;
-  readonly lsDisableDiagnostics: O.Option<boolean>;
-  readonly lsReviewDiagnostics: O.Option<Behavior>;
-  readonly lsTrace: O.Option<Behavior>;
-}
-
-interface UserPreferences {
-  readonly workspace: Readonly<Preferences>;
-  readonly global: Readonly<Preferences>;
-}
-
-interface InvokeFormatterError {
-  readonly _tag: "invokeFormatterError";
-  readonly reason: string;
-}
 
 interface InstallDepsError {
   readonly _tag: "installDepsError";
@@ -69,8 +38,6 @@ interface ServerOptions {
   readonly args?: Array<string>;
   readonly env?: Record<string, string>;
 }
-
-type Behavior = "error" | "off" | "warning";
 
 interface ClientSettings {
   readonly elmLS: Readonly<{
@@ -121,46 +88,6 @@ const extensionDir: string = nova.inDevMode()
   ? nova.extension.path
   : nova.extension.globalStoragePath;
 
-const mkExtensionDepsPath = (binary: string): string => {
-  return nova.path.join(extensionDir, "node_modules", ".bin", binary);
-};
-
-const safeFormat = (
-  unformattedText: string,
-  formatterPath: string,
-): TE.TaskEither<InvokeFormatterError, string> => {
-  return TE.tryCatch<InvokeFormatterError, string>(
-    () => {
-      return new Promise<string>((resolve, reject) => {
-        const process = new Process(formatterPath, {
-          args: ["--stdin"],
-          stdio: ["pipe", "pipe", "ignore"],
-        });
-
-        let stdout: string = "";
-        process.onStdout((line: string) => (stdout += line));
-
-        process.onDidExit((status) => (status === 0 ? resolve(stdout) : reject()));
-
-        /* HH - 2 Aug 2021
-         * Until Nova [Stream](https://bit.ly/2VrtInY) types are improved, I'm forced to do this 😞
-         */
-        const writer = (process.stdin as any).getWriter();
-        writer.ready.then(() => {
-          writer.write(unformattedText);
-          writer.close();
-        });
-
-        process.start();
-      });
-    },
-    () => ({
-      _tag: "invokeFormatterError",
-      reason: `${nova.localize("Failed to format the document")}.`,
-    }),
-  );
-};
-
 const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray<void>> => {
   return TE.sequenceSeqArray<void, InstallDepsError | StartError>([
     TE.tryCatch<InstallDepsError, void>(
@@ -201,14 +128,15 @@ const safeStart = (): TE.TaskEither<InstallDepsError | StartError, ReadonlyArray
           const clientOptions: ClientOptions = {
             initializationOptions: {
               elmLS: {
-                elmPath: selectElmPathWithDefault(preferences),
-                elmFormatPath: selectElmFormatPathWithDefault(preferences),
-                elmReviewPath: selectElmReviewPathWithDefault(preferences),
-                elmReviewDiagnostics: selectLSReviewDiagnosticsWithDefault(preferences),
-                elmTestPath: selectElmTestPathWithDefault(preferences),
-                disableElmLSDiagnostics: selectLSDisableDiagnosticsWithDefault(preferences),
+                elmPath: selectors.selectElmPathWithDefault(preferences),
+                elmFormatPath: selectors.selectElmFormatPathWithDefault(preferences),
+                elmReviewPath: selectors.selectElmReviewPathWithDefault(preferences),
+                elmReviewDiagnostics: selectors.selectLSReviewDiagnosticsWithDefault(preferences),
+                elmTestPath: selectors.selectElmTestPathWithDefault(preferences),
+                disableElmLSDiagnostics:
+                  selectors.selectLSDisableDiagnosticsWithDefault(preferences),
                 trace: {
-                  server: selectLSTraceWithDefault(preferences),
+                  server: selectors.selectLSTraceWithDefault(preferences),
                 },
                 skipInstallPackageConfirmation: false,
                 onlyUpdateDiagnosticsOnSave: false,
@@ -387,126 +315,15 @@ const extensionDisposable: CompositeDisposable = new CompositeDisposable();
 let saveListeners: Map<string, Disposable> = new Map();
 let languageClient: O.Option<LanguageClient> = O.none;
 
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectElmPathWithDefault = (preferences: UserPreferences): string => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.elmPath,
-    O.alt(() => global.elmPath),
-    O.getOrElse(() => mkExtensionDepsPath("elm")),
-  );
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectElmFormatPathWithDefault = (preferences: UserPreferences): string => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.elmFormatPath,
-    O.alt(() => global.elmFormatPath),
-    O.getOrElse(() => mkExtensionDepsPath("elm-format")),
-  );
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectElmReviewPathWithDefault = (preferences: UserPreferences): string => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.elmReviewPath,
-    O.alt(() => global.elmReviewPath),
-    O.getOrElse(() => mkExtensionDepsPath("elm-review")),
-  );
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectElmTestPathWithDefault = (preferences: UserPreferences): string => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.elmTestPath,
-    O.alt(() => global.elmTestPath),
-    O.getOrElse(() => mkExtensionDepsPath("elm-test")),
-  );
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectFormatOnSaveWithDefault = (preferences: UserPreferences): boolean => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return O.isSome(workspace.formatOnSave) || O.isSome(global.formatOnSave);
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectLSDisableDiagnosticsWithDefault = (preferences: UserPreferences): boolean => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return O.isSome(workspace.lsDisableDiagnostics) || O.isSome(global.lsDisableDiagnostics);
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectLSReviewDiagnosticsWithDefault = (preferences: UserPreferences): Behavior => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.lsReviewDiagnostics,
-    O.alt(() => global.lsReviewDiagnostics),
-    O.getOrElseW(() => "off"),
-  ) as Behavior;
-};
-
-/**
- * Gets a value giving precedence to workspace over global extension values.
- * @param {UserPreferences} preferences - user preferences
- */
-const selectLSTraceWithDefault = (preferences: UserPreferences): Behavior => {
-  const workspace = workspaceConfigsLens.get(preferences);
-  const global = globalConfigsLens.get(preferences);
-
-  return pipe(
-    workspace.lsTrace,
-    O.alt(() => global.lsTrace),
-    O.getOrElseW(() => "off"),
-  ) as Behavior;
-};
-
 const addSaveListener = (editor: TextEditor): void => {
   pipe(
     O.fromNullable(editor.document.syntax),
     O.chain(O.fromPredicate((syntax) => Str.Eq.equals(syntax, "elm"))),
     O.fold(constVoid, (_) => {
-      saveListeners = M.upsertAt(Str.Eq)(editor.document.uri, editor.onWillSave(formatDocument))(
-        saveListeners,
-      );
+      saveListeners = M.upsertAt(Str.Eq)(
+        editor.document.uri,
+        editor.onWillSave(formatDocument(preferences)),
+      )(saveListeners);
     }),
   );
 };
@@ -520,42 +337,13 @@ const clearSaveListeners = (): void => {
   saveListeners = new Map();
 };
 
-const formatDocument = (editor: TextEditor): Promise<void> => {
-  const formatterPath = selectElmFormatPathWithDefault(preferences);
-
-  const documentRange: Range = new Range(0, editor.document.length);
-  const documentText: string = editor.document.getTextInRange(documentRange);
-
-  return safeFormat(documentText, formatterPath)().then(
-    E.fold(
-      (err) => {
-        return match(err)
-          .with({ _tag: "invokeFormatterError" }, ({ reason }) => console.error(reason))
-          .exhaustive();
-      },
-      (formattedText: string) => {
-        editor
-          .edit((edit: TextEditorEdit) => {
-            edit.replace(documentRange, formattedText);
-          })
-          .then(() => {
-            console.log(`${nova.localize("Formatted")} ${editor.document.path}`);
-          })
-          .catch(() => {
-            console.error(`${nova.localize("Failed to replace editor text in-memory")}`);
-          });
-      },
-    ),
-  );
-};
-
 export const activate = (): void => {
   console.log(`${nova.localize("Activating")}...`);
   showNotification(`${nova.localize("Starting extension")}...`);
 
   extensionDisposable.add(
     nova.workspace.onDidAddTextEditor((editor: TextEditor): void => {
-      const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
+      const shouldFormatOnSave = selectors.selectFormatOnSaveWithDefault(preferences);
 
       if (shouldFormatOnSave) {
         addSaveListener(editor);
@@ -564,7 +352,7 @@ export const activate = (): void => {
   );
 
   extensionDisposable.add(
-    nova.commands.register(ExtensionConfigKeys.FormatDocument, formatDocument),
+    nova.commands.register(ExtensionConfigKeys.FormatDocument, formatDocument(preferences)),
   );
 
   extensionDisposable.add(
@@ -576,7 +364,7 @@ export const activate = (): void => {
           formatterPath: O.fromEither(D.string.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
+        const shouldFormatOnSave = selectors.selectFormatOnSaveWithDefault(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -595,7 +383,7 @@ export const activate = (): void => {
           formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
+        const shouldFormatOnSave = selectors.selectFormatOnSaveWithDefault(preferences);
 
         clearSaveListeners();
 
@@ -615,7 +403,7 @@ export const activate = (): void => {
           formatterPath: O.fromEither(D.string.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
+        const shouldFormatOnSave = selectors.selectFormatOnSaveWithDefault(preferences);
 
         if (shouldFormatOnSave) {
           clearSaveListeners();
@@ -634,7 +422,7 @@ export const activate = (): void => {
           formatOnSave: O.fromEither(D.boolean.decode(newValue)),
         }))(preferences);
 
-        const shouldFormatOnSave = selectFormatOnSaveWithDefault(preferences);
+        const shouldFormatOnSave = selectors.selectFormatOnSaveWithDefault(preferences);
 
         clearSaveListeners();
 
