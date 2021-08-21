@@ -10,6 +10,9 @@
 
 # builds
 
+# tests
+coverage
+
 # logs
 npm-debug.log*
 yarn-debug.log*
