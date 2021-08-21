@@ -27,9 +27,6 @@ jobs:
       - name: Install deps
         run: nix-shell --pure --run "make deps"
 
-      - name: Format
-        run: nix-shell --pure --run "make format"
-
       - name: Lint
         run: nix-shell --pure --run "make lint"
 
@@ -38,3 +35,6 @@ jobs:
 
       - name: Ensure clean
         run: nix-shell --pure --run "git status --porcelain; test -z '$(git status --porcelain)'"
+
+      - name: Test
+        run: nix-shell --pure --run "make test"
