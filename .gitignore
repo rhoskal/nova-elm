@@ -2,9 +2,10 @@
 .DS_Store
 .idea
 .vscode
+.nova
 
 # dependencies
-/**/node_modules/**/*
+node_modules/
 /.pnp
 .pnp.js
 
