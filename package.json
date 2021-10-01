@@ -38,7 +38,7 @@
     "ts-pattern": "^3.3.3"
   },
   "devDependencies": {
-    "@prettier/plugin-xml": "^1.0.2",
+    "@prettier/plugin-xml": "^1.1.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.2",
     "@types/nova-editor-node": "^4.1.3",
