@@ -6,7 +6,7 @@
     "": {
       "name": "elm.novaextension",
       "dependencies": {
-        "@elm-tooling/elm-language-server": "^2.3.0",
+        "@elm-tooling/elm-language-server": "^2.4.0",
         "elm": "^0.19.1-5",
         "elm-format": "^0.8.5",
         "elm-review": "^2.7.0",
@@ -14,9 +14,9 @@
       }
     },
     "node_modules/@elm-tooling/elm-language-server": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/@elm-tooling/elm-language-server/-/elm-language-server-2.3.0.tgz",
-      "integrity": "sha512-j5EYk1FVsRk54mQt4bRzODq4o+2RnklW9UlTQI3xvkPsIXM1wrjGcTZF0fVBWjRN/QulYQgrQAFrNZ8iTp71sg==",
+      "version": "2.4.0",
+      "resolved": "https://registry.npmjs.org/@elm-tooling/elm-language-server/-/elm-language-server-2.4.0.tgz",
+      "integrity": "sha512-jGK8tQqA2HI4+f8uiUNk76Z0YbnfDQqy5g9/tJ2ung0f4Xd3WapJQBeAKFIniOAnRYwhL3EP8S25XThFp0bWiw==",
       "dependencies": {
         "chokidar": "^3.5.2",
         "escape-string-regexp": "^4.0.0",
@@ -25,12 +25,12 @@
         "globby": "^11.0.4",
         "pjson": "1.0.9",
         "reflect-metadata": "^0.1.13",
-        "ts-debounce": "^3.0.0",
+        "ts-debounce": "^4.0.0",
         "tsyringe": "^4.6.0",
         "vscode-languageserver": "^7.0.0",
-        "vscode-languageserver-textdocument": "1.0.2",
-        "vscode-uri": "^3.0.2",
-        "web-tree-sitter": "^0.19.4"
+        "vscode-languageserver-textdocument": "1.0.3",
+        "vscode-uri": "^3.0.3",
+        "web-tree-sitter": "^0.20.2"
       },
       "bin": {
         "elm-language-server": "out/index.js"
@@ -2175,9 +2175,9 @@
       }
     },
     "node_modules/ts-debounce": {
-      "version": "3.0.0",
-      "resolved": "https://registry.npmjs.org/ts-debounce/-/ts-debounce-3.0.0.tgz",
-      "integrity": "sha512-7jiRWgN4/8IdvCxbIwnwg2W0bbYFBH6BxFqBjMKk442t7+liF2Z1H6AUCcl8e/pD93GjPru+axeiJwFmRww1WQ=="
+      "version": "4.0.0",
+      "resolved": "https://registry.npmjs.org/ts-debounce/-/ts-debounce-4.0.0.tgz",
+      "integrity": "sha512-+1iDGY6NmOGidq7i7xZGA4cm8DAa6fqdYcvO5Z6yBevH++Bdo9Qt/mN0TzHUgcCcKv1gmh9+W5dHqz8pMWbCbg=="
     },
     "node_modules/tslib": {
       "version": "1.14.1",
@@ -2314,9 +2314,9 @@
       }
     },
     "node_modules/vscode-languageserver-textdocument": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.2.tgz",
-      "integrity": "sha512-T7uPC18+f8mYE4lbVZwb3OSmvwTZm3cuFhrdx9Bn2l11lmp3SvSuSVjy2JtvrghzjAo4G6Trqny2m9XGnFnWVA=="
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.3.tgz",
+      "integrity": "sha512-ynEGytvgTb6HVSUwPJIAZgiHQmPCx8bZ8w5um5Lz+q5DjP0Zj8wTFhQpyg8xaMvefDytw2+HH5yzqS+FhsR28A=="
     },
     "node_modules/vscode-languageserver-types": {
       "version": "3.16.0",
@@ -2324,9 +2324,9 @@
       "integrity": "sha512-k8luDIWJWyenLc5ToFQQMaSrqCHiLwyKPHKPQZ5zz21vM+vIVUSvsRpcbiECH4WR88K2XZqc4ScRcZ7nk/jbeA=="
     },
     "node_modules/vscode-uri": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.0.2.tgz",
-      "integrity": "sha512-jkjy6pjU1fxUvI51P+gCsxg1u2n8LSt0W6KrCNQceaziKzff74GoWmjVG46KieVzybO1sttPQmYfrwSHey7GUA=="
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.0.3.tgz",
+      "integrity": "sha512-EcswR2S8bpR7fD0YPeS7r2xXExrScVMxg4MedACaWHEtx9ftCF/qHG1xGkolzTPcEmjTavCQgbVzHUIdTMzFGA=="
     },
     "node_modules/wcwidth": {
       "version": "1.0.1",
@@ -2337,9 +2337,9 @@
       }
     },
     "node_modules/web-tree-sitter": {
-      "version": "0.19.4",
-      "resolved": "https://registry.npmjs.org/web-tree-sitter/-/web-tree-sitter-0.19.4.tgz",
-      "integrity": "sha512-8G0xBj05hqZybCqBtW7RPZ/hWEtP3DiLTauQzGJZuZYfVRgw7qj7iaZ+8djNqJ4VPrdOO+pS2dR1JsTbsLxdYg=="
+      "version": "0.20.2",
+      "resolved": "https://registry.npmjs.org/web-tree-sitter/-/web-tree-sitter-0.20.2.tgz",
+      "integrity": "sha512-beDt3JEETNzl4pBtpLuaVc36LAfkOouFZFktTVmY1g2Wjy+IPk2Zif1KCUhbyXtOx3khXtRViG99b0zqtbfW1A=="
     },
     "node_modules/which": {
       "version": "2.0.2",
@@ -2389,9 +2389,9 @@
   },
   "dependencies": {
     "@elm-tooling/elm-language-server": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/@elm-tooling/elm-language-server/-/elm-language-server-2.3.0.tgz",
-      "integrity": "sha512-j5EYk1FVsRk54mQt4bRzODq4o+2RnklW9UlTQI3xvkPsIXM1wrjGcTZF0fVBWjRN/QulYQgrQAFrNZ8iTp71sg==",
+      "version": "2.4.0",
+      "resolved": "https://registry.npmjs.org/@elm-tooling/elm-language-server/-/elm-language-server-2.4.0.tgz",
+      "integrity": "sha512-jGK8tQqA2HI4+f8uiUNk76Z0YbnfDQqy5g9/tJ2ung0f4Xd3WapJQBeAKFIniOAnRYwhL3EP8S25XThFp0bWiw==",
       "requires": {
         "chokidar": "^3.5.2",
         "escape-string-regexp": "^4.0.0",
@@ -2400,12 +2400,12 @@
         "globby": "^11.0.4",
         "pjson": "1.0.9",
         "reflect-metadata": "^0.1.13",
-        "ts-debounce": "^3.0.0",
+        "ts-debounce": "^4.0.0",
         "tsyringe": "^4.6.0",
         "vscode-languageserver": "^7.0.0",
-        "vscode-languageserver-textdocument": "1.0.2",
-        "vscode-uri": "^3.0.2",
-        "web-tree-sitter": "^0.19.4"
+        "vscode-languageserver-textdocument": "1.0.3",
+        "vscode-uri": "^3.0.3",
+        "web-tree-sitter": "^0.20.2"
       }
     },
     "@nodelib/fs.scandir": {
@@ -3931,9 +3931,9 @@
       "integrity": "sha1-cXuPIgzAu3tE5AUUwisui7xw2Lk="
     },
     "ts-debounce": {
-      "version": "3.0.0",
-      "resolved": "https://registry.npmjs.org/ts-debounce/-/ts-debounce-3.0.0.tgz",
-      "integrity": "sha512-7jiRWgN4/8IdvCxbIwnwg2W0bbYFBH6BxFqBjMKk442t7+liF2Z1H6AUCcl8e/pD93GjPru+axeiJwFmRww1WQ=="
+      "version": "4.0.0",
+      "resolved": "https://registry.npmjs.org/ts-debounce/-/ts-debounce-4.0.0.tgz",
+      "integrity": "sha512-+1iDGY6NmOGidq7i7xZGA4cm8DAa6fqdYcvO5Z6yBevH++Bdo9Qt/mN0TzHUgcCcKv1gmh9+W5dHqz8pMWbCbg=="
     },
     "tslib": {
       "version": "1.14.1",
@@ -4041,9 +4041,9 @@
       }
     },
     "vscode-languageserver-textdocument": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.2.tgz",
-      "integrity": "sha512-T7uPC18+f8mYE4lbVZwb3OSmvwTZm3cuFhrdx9Bn2l11lmp3SvSuSVjy2JtvrghzjAo4G6Trqny2m9XGnFnWVA=="
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.3.tgz",
+      "integrity": "sha512-ynEGytvgTb6HVSUwPJIAZgiHQmPCx8bZ8w5um5Lz+q5DjP0Zj8wTFhQpyg8xaMvefDytw2+HH5yzqS+FhsR28A=="
     },
     "vscode-languageserver-types": {
       "version": "3.16.0",
@@ -4051,9 +4051,9 @@
       "integrity": "sha512-k8luDIWJWyenLc5ToFQQMaSrqCHiLwyKPHKPQZ5zz21vM+vIVUSvsRpcbiECH4WR88K2XZqc4ScRcZ7nk/jbeA=="
     },
     "vscode-uri": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.0.2.tgz",
-      "integrity": "sha512-jkjy6pjU1fxUvI51P+gCsxg1u2n8LSt0W6KrCNQceaziKzff74GoWmjVG46KieVzybO1sttPQmYfrwSHey7GUA=="
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.0.3.tgz",
+      "integrity": "sha512-EcswR2S8bpR7fD0YPeS7r2xXExrScVMxg4MedACaWHEtx9ftCF/qHG1xGkolzTPcEmjTavCQgbVzHUIdTMzFGA=="
     },
     "wcwidth": {
       "version": "1.0.1",
@@ -4064,9 +4064,9 @@
       }
     },
     "web-tree-sitter": {
-      "version": "0.19.4",
-      "resolved": "https://registry.npmjs.org/web-tree-sitter/-/web-tree-sitter-0.19.4.tgz",
-      "integrity": "sha512-8G0xBj05hqZybCqBtW7RPZ/hWEtP3DiLTauQzGJZuZYfVRgw7qj7iaZ+8djNqJ4VPrdOO+pS2dR1JsTbsLxdYg=="
+      "version": "0.20.2",
+      "resolved": "https://registry.npmjs.org/web-tree-sitter/-/web-tree-sitter-0.20.2.tgz",
+      "integrity": "sha512-beDt3JEETNzl4pBtpLuaVc36LAfkOouFZFktTVmY1g2Wjy+IPk2Zif1KCUhbyXtOx3khXtRViG99b0zqtbfW1A=="
     },
     "which": {
       "version": "2.0.2",
