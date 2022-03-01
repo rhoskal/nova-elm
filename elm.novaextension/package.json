@@ -2,7 +2,7 @@
   "name": "elm.novaextension",
   "private": true,
   "dependencies": {
-    "@elm-tooling/elm-language-server": "^2.4.0",
+    "@elm-tooling/elm-language-server": "^2.4.1",
     "elm": "^0.19.1-5",
     "elm-format": "^0.8.5",
     "elm-review": "^2.7.0",
