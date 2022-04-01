@@ -35,7 +35,7 @@
     "fp-ts": "^2.11.8",
     "io-ts": "^2.2.16",
     "monocle-ts": "^2.3.12",
-    "ts-pattern": "^3.3.5"
+    "ts-pattern": "^4.0.1"
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^1.2.0",
